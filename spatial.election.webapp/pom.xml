@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>webapp</artifactId>
+	<packaging>war</packaging>
+	<name>Spatial Election - Actual Application</name>
+
+
+	<parent>
+		<artifactId>root</artifactId>
+		<groupId>edu.spatial.election</groupId>
+		<version>0.1</version>
+		<relativePath>../spatial.election.root/pom.xml</relativePath>
+	</parent>
+	
+
+	<properties>
+    	<final.name>spatial.election</final.name>
+    	<final.version>0.1</final.version>
+    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>edu.spatial.election</groupId>
+			<artifactId>database</artifactId>
+			<version>${project.parent.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>edu.spatial.election</groupId>
+			<artifactId>parsers</artifactId>
+			<version>${project.parent.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.14</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.5</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.8.3</version>
+		</dependency>
+
+
+
+        <!-- javamelody-core -->
+        <dependency>
+                <groupId>net.bull.javamelody</groupId>
+                <artifactId>javamelody-core</artifactId>
+                <version>1.41.0</version>
+        </dependency>
+        
+        <!-- itext, option to add PDF export -->
+        <dependency>
+                <groupId>com.lowagie</groupId>
+                <artifactId>itext</artifactId>
+                <version>2.1.7</version>
+                <exclusions>
+                        <exclusion>
+                                <artifactId>bcmail-jdk14</artifactId>
+                                <groupId>bouncycastle</groupId>
+                        </exclusion>
+                        <exclusion>
+                                <artifactId>bcprov-jdk14</artifactId>
+                                <groupId>bouncycastle</groupId>
+                        </exclusion>
+                        <exclusion>
+                                <artifactId>bctsp-jdk14</artifactId>
+                                <groupId>bouncycastle</groupId>
+                        </exclusion>
+                </exclusions>
+        </dependency>
+
+	</dependencies>
+
+
+	<build>
+    	<finalName>${final.name}##${project.version}-${final.version}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.21</version>
+				<configuration>
+					<stopPort>9966</stopPort>
+					<stopKey>foo</stopKey>
+					<webAppConfig>
+						<contextPath>/election</contextPath>
+					</webAppConfig>
+					<scanIntervalSeconds>10</scanIntervalSeconds>
+					<scanTargets>
+						<scanTarget>src/main/webapp/WEB-INF</scanTarget>
+						<scanTarget>src/main/webapp/WEB-INF/web.xml</scanTarget>
+						<scanTarget>src/main/resources/struts.xml</scanTarget>
+					</scanTargets>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
