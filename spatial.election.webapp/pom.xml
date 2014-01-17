@@ -17,9 +17,10 @@
 	
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<hibernate.version>4.0.0.Final</hibernate.version>
     	<final.name>spatial.election</final.name>
     	<final.version>0.1</final.version>
-    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 
@@ -37,67 +38,53 @@
 			<scope>compile</scope>
 		</dependency>
 
+		
 
+		<!-- misc -->
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.14</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.5</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.4</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jsp-api</artifactId>
-			<version>2.0</version>
-			<scope>provided</scope>
+			<groupId>asm</groupId>
+			<artifactId>asm-all</artifactId>
+			<version>3.1</version>
 		</dependency>
 
-
 		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils</artifactId>
-			<version>1.8.3</version>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20131018</version>
+		</dependency>
+		
+		<!-- jersey -->
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-server</artifactId>
+			<version>1.18</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-json</artifactId>
+			<version>1.18</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-core</artifactId>
+			<version>1.18</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-servlet</artifactId>
+			<version>1.18</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>1.18</version>
 		</dependency>
 
-
-
-        <!-- javamelody-core -->
-        <dependency>
-                <groupId>net.bull.javamelody</groupId>
-                <artifactId>javamelody-core</artifactId>
-                <version>1.41.0</version>
-        </dependency>
-        
-        <!-- itext, option to add PDF export -->
-        <dependency>
-                <groupId>com.lowagie</groupId>
-                <artifactId>itext</artifactId>
-                <version>2.1.7</version>
-                <exclusions>
-                        <exclusion>
-                                <artifactId>bcmail-jdk14</artifactId>
-                                <groupId>bouncycastle</groupId>
-                        </exclusion>
-                        <exclusion>
-                                <artifactId>bcprov-jdk14</artifactId>
-                                <groupId>bouncycastle</groupId>
-                        </exclusion>
-                        <exclusion>
-                                <artifactId>bctsp-jdk14</artifactId>
-                                <groupId>bouncycastle</groupId>
-                        </exclusion>
-                </exclusions>
-        </dependency>
 
 	</dependencies>
 
@@ -119,10 +106,18 @@
 					<scanTargets>
 						<scanTarget>src/main/webapp/WEB-INF</scanTarget>
 						<scanTarget>src/main/webapp/WEB-INF/web.xml</scanTarget>
-						<scanTarget>src/main/resources/struts.xml</scanTarget>
 					</scanTargets>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+	
+	
+		<!-- add JBOSS repository for easy access to Hibernate libraries -->
+	<repositories>
+		<repository>
+			<id>JBOSS</id>
+			<url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
+		</repository>
+	</repositories>
 </project>
