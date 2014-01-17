@@ -25,6 +25,6 @@
 
 	<servlet-mapping>
 		<servlet-name>Election</servlet-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/backend/*</url-pattern>
 	</servlet-mapping>
 </web-app>
