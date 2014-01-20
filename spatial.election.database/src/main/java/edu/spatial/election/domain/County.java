@@ -1,11 +1,26 @@
 package edu.spatial.election.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.hibernate.annotations.Any;
+import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.JoinColumnOrFormula;
+import org.hibernate.annotations.JoinColumnsOrFormulas;
+import org.hibernate.annotations.JoinFormula;
 import org.hibernate.annotations.Type;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
@@ -39,7 +54,7 @@ public class County extends ExportableGeometry {
 	@Column(name="name_2")
 	private String districtName;
 
-	@Column(name="id_3")
+	@Column(name="id_3", unique=true)
 	private int countyId;
 
 	@Column(name="name_3")
@@ -61,6 +76,11 @@ public class County extends ExportableGeometry {
 	@Column(columnDefinition="Geometry")
 	private MultiPolygon geom;
 
+
+	@JsonIgnore
+	@OneToMany
+	@JoinColumn(name="county_id")
+	private Set<CountyContainsConstituency> dependingConstituencies = new HashSet<CountyContainsConstituency>();
 	
 	
 	
@@ -168,5 +188,23 @@ public class County extends ExportableGeometry {
 	public void setGeom(MultiPolygon geom) {
 		this.geom = geom;
 	}
+
+	public String getDistrictName() {
+		return districtName;
+	}
+
+	public void setDistrictName(String districtName) {
+		this.districtName = districtName;
+	}
+
+	public Set<CountyContainsConstituency> getDependingConstituencies() {
+		return dependingConstituencies;
+	}
+
+	public void setDependingConstituencies(
+			Set<CountyContainsConstituency> dependingConstituencies) {
+		this.dependingConstituencies = dependingConstituencies;
+	}
+
 
 }

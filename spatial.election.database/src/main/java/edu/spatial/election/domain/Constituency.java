@@ -1,9 +1,16 @@
 package edu.spatial.election.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Type;
@@ -19,6 +26,7 @@ public class Constituency extends ExportableGeometry {
 	@GeneratedValue
 	private long gid;
 	
+	@Column(unique=true)
 	private int wkr_nr;
 	
 	private String wkr_name;
@@ -36,6 +44,14 @@ public class Constituency extends ExportableGeometry {
     @Type(type="org.hibernate.spatial.GeometryType")
 	@Column(columnDefinition="Geometry")
 	private MultiPolygon geom;
+		
+
+	@JsonIgnore
+	@OneToMany
+	@JoinColumn(name="constituency_id")
+	private Set<CountyContainsConstituency> dependingCounties = new HashSet<CountyContainsConstituency>();
+	
+	
 	
 	
 	
@@ -87,6 +103,22 @@ public class Constituency extends ExportableGeometry {
 		this.geom = geom;
 	}
 
+	public Point getCenterPoint() {
+		return centerPoint;
+	}
+
+	public void setCenterPoint(Point centerPoint) {
+		this.centerPoint = centerPoint;
+	}
+
+	public Set<CountyContainsConstituency> getDependingCounties() {
+		return dependingCounties;
+	}
+
+	public void setDependingCounties(
+			Set<CountyContainsConstituency> dependingCounties) {
+		this.dependingCounties = dependingCounties;
+	}
 
 	
 }
