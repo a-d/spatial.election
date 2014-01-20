@@ -10,7 +10,8 @@ var app = angular.module('myApp', [
                                    'myApp.controllers'
                                    ]);
 angular.module('d3', []);
-angular.module('myApp.directives', ['d3']);
+angular.module('Counties', []);
+angular.module('myApp.directives', ['d3', 'Counties']);
 
 function mainCtrl($scope, Constituency) {
 

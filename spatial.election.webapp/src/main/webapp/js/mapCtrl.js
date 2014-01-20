@@ -1,21 +1,29 @@
 
 
-function mapCtrl($scope, d3, Constituencies) {
-	
-	Constituencies.get({'level' : 2}).$promise.then(function (wkrs) {
+function mapCtrl($scope, d3, Counties) {
 		
+	Counties.get({'level' : 2}).$promise.then(function (wkrs) {
+
 		/* visualization */
 		var
 		width = 800,
 		height = 600,
 		vis = d3.select("body").append("svg").attr("width", width).attr("height", height),
 		allBaseLines = [],
+		color = d3.scale.category10(),
+		
+		/*
+		 * constituencies:
 		scaleX = d3.scale.linear().domain([ 200000, 1000000 ]).range([ 0, width ]),
 		scaleY = d3.scale.linear().domain([ 5203000, 6159000 ]).range([ height, 0 ]),
-		color = d3.scale.category10();
+		*/
+		
+		/*
+		 * counties:
+		 */
+		scaleX = d3.scale.linear().domain([ 5, 17]).range([ 0, width ]),
+		scaleY = d3.scale.linear().domain([ 47, 56]).range([ height, 0 ]);
 
-		window.vis = vis;
-		window.wkrs = wkrs;
 		
 		vis.selectAll("g")
 			.data(wkrs).enter().append("g")
@@ -28,8 +36,11 @@ function mapCtrl($scope, d3, Constituencies) {
 			
 			.on("click", (function(e) {
 				var txt = "";
-				var keys = ["gid", "land_name", "land_nr", "wkr_name", "wkr_nr"]
-				for(i=0; i<keys.length; i++) txt += keys[i] + " = " + e[keys[i]] + "\n";
+				for(key in e) {
+					if(typeof e[key]=="string" || typeof e[key]=="number" || typeof e[key]=="boolean") {
+						txt += key + " = " + e[key] + "\n";
+					}
+				}
 				alert(txt);
 			}))
 

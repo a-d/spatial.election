@@ -22,9 +22,9 @@ angular.module('myApp.services', ['ngResource']) //
 }]);
 
 
-angular.module('myApp.services', ['ngResource'])
-.factory('Constituencies', [ '$resource', function($resource) {
-	var baseurl = 'backend/constituency/detail/';
+angular.module('myApp.services')
+.factory('Counties', [ '$resource', function($resource) {
+	var baseurl = 'backend/county/detail/';
 	return $resource(baseurl + ':level/', {
 		id : '@level'
 	},
@@ -39,3 +39,4 @@ angular.module('myApp.services', ['ngResource'])
         }
     });
 }]);
+

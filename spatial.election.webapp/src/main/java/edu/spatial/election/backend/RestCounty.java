@@ -11,36 +11,36 @@ import javax.ws.rs.core.MediaType;
 import org.hibernate.Session;
 
 import edu.spatial.election.database.DatabaseConnection;
-import edu.spatial.election.database.dao.ConstituencyDAO;
+import edu.spatial.election.database.dao.CountyDAO;
 import edu.spatial.election.database.dao.SpatialDAOFactory;
-import edu.spatial.election.database.exceptions.ConstituencyNotFoundException;
-import edu.spatial.election.domain.Constituency;
+import edu.spatial.election.database.exceptions.CountyNotFoundException;
+import edu.spatial.election.domain.County;
 
 
-@Path("/constituency")
-public class RestConstituency {
+@Path("/county")
+public class RestCounty {
 	private SpatialDAOFactory f = SpatialDAOFactory.getDAOFactory(SpatialDAOFactory.POSTGIS);
 
 
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<Constituency> getAllConstituencies() {
-		return getAllConstituenciesByDetail(0);
+	public List<County> getAllCounties() {
+		return getAllCountiesByDetail(0);
 	}
 	
 	@GET
 	@Path("/detail/{level}")
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<Constituency> getAllConstituenciesByDetail(@PathParam("level") double level) {
+	public List<County> getAllCountiesByDetail(@PathParam("level") double level) {
 
 		Session s = DatabaseConnection.openSession();
 
 		// Create a DAO
-		ConstituencyDAO constituencyDAO = f.getConstituencyDAO();
-		constituencyDAO.setConnection(s);
+		CountyDAO countyDAO = f.getCountyDAO();
+		countyDAO.setConnection(s);
 
-		List<Constituency> cs = constituencyDAO.getConstituencies();
-		for(Constituency c : cs)
+		List<County> cs = countyDAO.getCounties();
+		for(County c : cs)
 		{
 			c.setGeometryDetail(level);
 			c.getGeometryArray();
@@ -53,15 +53,15 @@ public class RestConstituency {
 	@GET
 	@Path("{id}")
 	@Produces({MediaType.APPLICATION_JSON})
-	public Constituency getConstituencyById(@PathParam("id") long id) throws ConstituencyNotFoundException {
+	public County getCountyById(@PathParam("id") long id) throws CountyNotFoundException {
 		
 		Session s = DatabaseConnection.openSession();
 
 		// Create a DAO
-		ConstituencyDAO constituencyDAO = f.getConstituencyDAO();
-		constituencyDAO.setConnection(s);
+		CountyDAO countyDAO = f.getCountyDAO();
+		countyDAO.setConnection(s);
 
-		Constituency c = constituencyDAO.findConstituencyById(id);
+		County c = countyDAO.findCountyById(id);
 		
 		s.close();
 		return c;
