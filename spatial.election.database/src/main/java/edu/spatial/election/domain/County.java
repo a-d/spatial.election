@@ -1,9 +1,14 @@
 package edu.spatial.election.domain;
 
+import java.util.List;
+
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Type;
@@ -60,9 +65,13 @@ public class County extends ExportableGeometry {
     @Type(type="org.hibernate.spatial.GeometryType")
 	@Column(columnDefinition="Geometry")
 	private MultiPolygon geom;
-
 	
-	
+	@ElementCollection
+	@CollectionTable(
+			name="COUTNY_DATA",
+			joinColumns=@JoinColumn(name="GID")
+			)
+	private List<CountyData> data;
 	
 	
 	public long getGid() {
