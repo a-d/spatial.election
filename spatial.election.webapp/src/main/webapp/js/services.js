@@ -3,7 +3,7 @@
 
 angular.module('myApp.services', ['ngResource']) //
 .factory('Constituency', [ '$resource', function($resource) {
-	var baseurl = 'rest/constituency/';
+	var baseurl = 'backend/constituency/';
 	return $resource(baseurl + ':id/', {
 		id : '@id'
 	}, {
