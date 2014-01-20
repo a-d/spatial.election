@@ -58,4 +58,9 @@ public class PostgisConstituencyDAO implements ConstituencyDAO {
 	public void setConnection(Session s) {
 		this.s = s;
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<Constituency> findConstituenciesByState() {
+		return (List<Constituency>) s.createCriteria(Constituency.class).list();
+	}
 }

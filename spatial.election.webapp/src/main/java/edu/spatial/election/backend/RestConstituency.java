@@ -1,6 +1,7 @@
 package edu.spatial.election.backend;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -24,8 +25,30 @@ public class RestConstituency {
 
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public Constituency getAllConstituencies() throws ConstituencyNotFoundException, SQLException {
-		return getConstituencyById(67);
+	public List<Constituency> getAllConstituencies() throws ConstituencyNotFoundException, SQLException {
+		return getAllConstituenciesByDetail(0);
+	}
+	
+	@GET
+	@Path("/zoom/{detail}")
+	@Produces({MediaType.APPLICATION_JSON})
+	public List<Constituency> getAllConstituenciesByDetail(@PathParam("detail") double detail) {
+
+		Session s = DatabaseConnection.openSession();
+
+		// Create a DAO
+		ConstituencyDAO constituencyDAO = f.getConstituencyDAO();
+		constituencyDAO.setConnection(s);
+
+		List<Constituency> cs = constituencyDAO.findConstituenciesByState();
+		for(Constituency c : cs)
+		{
+			c.setGeometryDetail(detail);
+			c.getGeometryArray();
+		}
+		
+		s.close();
+		return cs;
 	}
 
 	@GET

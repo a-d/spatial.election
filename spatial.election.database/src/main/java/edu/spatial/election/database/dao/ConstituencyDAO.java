@@ -1,6 +1,7 @@
 package edu.spatial.election.database.dao;
 
 import java.util.Collection;
+import java.util.List;
 
 import edu.spatial.election.database.exceptions.ConstituencyNotFoundException;
 import edu.spatial.election.domain.Constituency;
@@ -15,5 +16,7 @@ public interface ConstituencyDAO extends SimpleDAO{
 	public void saveConstituency(Constituency constituency);
 
 	public void deleteConstituency(long id) throws ConstituencyNotFoundException;
+
+	public List<Constituency> findConstituenciesByState();
 
 }
