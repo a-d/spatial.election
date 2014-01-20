@@ -14,18 +14,16 @@ function mapCtrl($scope, d3, Constituencies) {
 		scaleY = d3.scale.linear().domain([ 5203000, 6159000 ]).range([ height, 0 ]),
 		color = d3.scale.category10();
 
-		vis.selectAll("polygon").data(wkrs).enter().append("polygon")
-			.attr("points",
-				function(d) {
-					return d.coordinates.map(function(d) {
-						return [ scaleX(d[0]), scaleY(d[1]) ].join(",");
-					}).join(" ");
-				})
-
+		window.vis = vis;
+		window.wkrs = wkrs;
+		
+		vis.selectAll("g")
+			.data(wkrs).enter().append("g")
+			.attr("id", function(d) { return d.gid; })
 			.attr("fill", function(d) {
 				return "black"; //color(d.wkr_name)
 			})
-			.attr("stroke", "#666")
+			.attr("stroke", "#333")
 			.attr("stroke-width", 2)
 			
 			.on("click", (function(e) {
@@ -33,7 +31,16 @@ function mapCtrl($scope, d3, Constituencies) {
 				var keys = ["gid", "land_name", "land_nr", "wkr_name", "wkr_nr"]
 				for(i=0; i<keys.length; i++) txt += keys[i] + " = " + e[keys[i]] + "\n";
 				alert(txt);
-			}));
+			}))
+
+			.selectAll("polygon")
+				.data(function(d) { return d.coordinates; }).enter().append("polygon")
+				.attr("points",
+					function(d) {
+						return d.map(function(d) {
+							return [ scaleX(d[0]), scaleY(d[1]) ].join(",");
+						}).join(" ");
+					});
 
 /*
 		// add legend   
