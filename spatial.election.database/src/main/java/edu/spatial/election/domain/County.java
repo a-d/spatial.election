@@ -66,6 +66,7 @@ public class County extends ExportableGeometry {
 	@Column(columnDefinition="Geometry")
 	private MultiPolygon geom;
 	
+	@JsonIgnore
 	@ElementCollection
 	@CollectionTable(
 			name="COUTNY_DATA",
@@ -176,6 +177,14 @@ public class County extends ExportableGeometry {
 
 	public void setGeom(MultiPolygon geom) {
 		this.geom = geom;
+	}
+
+	public List<CountyData> getData() {
+		return data;
+	}
+
+	public void setData(List<CountyData> data) {
+		this.data = data;
 	}
 
 }

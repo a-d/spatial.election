@@ -43,6 +43,7 @@ public class Constituency extends ExportableGeometry {
 	@Column(columnDefinition="Geometry")
 	private MultiPolygon geom;
 
+	@JsonIgnore
 	@ElementCollection
 	@CollectionTable(
 			name="CONSTITUENCY_DATA",
@@ -98,6 +99,11 @@ public class Constituency extends ExportableGeometry {
 		this.geom = geom;
 	}
 
+	public List<ConstituencyData> getData() {
+		return data;
+	}
 
-
+	public void setData(List<ConstituencyData> data) {
+		this.data = data;
+	}
 }
