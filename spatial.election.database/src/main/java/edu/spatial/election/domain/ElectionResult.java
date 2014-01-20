@@ -13,27 +13,27 @@ import edu.spatial.election.domain.keys.ElectionResultKey;
 public class ElectionResult {
 	
 	@Id
-	private long partyID;
+	private long partyId;
 	
 	@Id
-	private long constituencyID;
+	private long constituencyId;
 	
 	private long votes;
 
-	public long getPartyID() {
-		return partyID;
+	public long getPartyId() {
+		return partyId;
 	}
 
-	public void setPartyID(long partyID) {
-		this.partyID = partyID;
+	public void setPartyId(long partyId) {
+		this.partyId = partyId;
 	}
 
-	public long getConstituencyID() {
-		return constituencyID;
+	public long getConstituencyId() {
+		return constituencyId;
 	}
 
-	public void setConstituencyID(long constituencyID) {
-		this.constituencyID = constituencyID;
+	public void setConstituencyId(long constituencyId) {
+		this.constituencyId = constituencyId;
 	}
 
 	public long getVotes() {

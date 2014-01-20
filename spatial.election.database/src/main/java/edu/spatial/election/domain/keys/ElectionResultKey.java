@@ -15,7 +15,23 @@ public class ElectionResultKey implements Serializable {
 		this.partyID = partyID;
 		this.constituencyID = constituencyID;
 	}
-	
+
+	public long getPartyID() {
+		return partyID;
+	}
+
+	public void setPartyID(long partyID) {
+		this.partyID = partyID;
+	}
+
+	public long getConstituencyID() {
+		return constituencyID;
+	}
+
+	public void setConstituencyID(long constituencyID) {
+		this.constituencyID = constituencyID;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 	    if (o == null) return false;
@@ -37,20 +53,9 @@ public class ElectionResultKey implements Serializable {
 	public int hashCode() {
 		return 0;
 	}
-
-	public long getPartyID() {
-		return partyID;
-	}
-
-	public void setPartyID(long partyID) {
-		this.partyID = partyID;
-	}
-
-	public long getConstituencyID() {
-		return constituencyID;
-	}
-
-	public void setConstituencyID(long constituencyID) {
-		this.constituencyID = constituencyID;
+	
+	@Override
+	public String toString() {
+		return "Election Result Key Object with: ConstituencyID " + this.constituencyID + " PartyID " + this.partyID;
 	}
 }
