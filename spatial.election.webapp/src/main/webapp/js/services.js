@@ -20,3 +20,22 @@ angular.module('myApp.services', ['ngResource']) //
 		}
 	});
 }]);
+
+
+angular.module('myApp.services', ['ngResource'])
+.factory('Constituencies', [ '$resource', function($resource) {
+	var baseurl = 'backend/constituency/detail/';
+	return $resource(baseurl + ':level/', {
+		id : '@level'
+	},
+    {
+        'get': {
+            method: 'GET',
+            transformResponse: function (data) {
+            	var dat = angular.fromJson(data);
+            	return dat.list ? dat.list : dat;
+            },
+            isArray: true //since your list property is an array
+        }
+    });
+}]);

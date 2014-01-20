@@ -30,9 +30,9 @@ public class RestConstituency {
 	}
 	
 	@GET
-	@Path("/zoom/{detail}")
+	@Path("/detail/{level}")
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<Constituency> getAllConstituenciesByDetail(@PathParam("detail") double detail) {
+	public List<Constituency> getAllConstituenciesByDetail(@PathParam("level") double level) {
 
 		Session s = DatabaseConnection.openSession();
 
@@ -43,7 +43,7 @@ public class RestConstituency {
 		List<Constituency> cs = constituencyDAO.findConstituenciesByState();
 		for(Constituency c : cs)
 		{
-			c.setGeometryDetail(detail);
+			c.setGeometryDetail(level);
 			c.getGeometryArray();
 		}
 		
