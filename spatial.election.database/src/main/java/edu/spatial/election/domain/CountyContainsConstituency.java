@@ -11,56 +11,52 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-
-
 @Entity
 @Table(name = "COUNTY_DEPENDING_CONSTITUENCY")
 public class CountyContainsConstituency implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="county_Id")
+	@Column(name = "county_Id")
 	private int countyId;
-	
+
 	@Id
-	@Column(name="constituency_Id")
+	@Column(name = "constituency_Id")
 	private int constituencyId;
 
-	@Column(name="county_label")
+	@Column(name = "county_label")
 	private String countyName;
 
-	@Column(name="constituency_label")
+	@Column(name = "constituency_label")
 	private String constituencyName;
 
-	@Column(name="area_intersection")
+	@Column(name = "area_intersection")
 	private double areaIntersection;
-	
-	@Column(name="density")
+
+	@Column(name = "density")
 	private double populationDensity;
-	
-	@Column(name="ratio")
+
+	@Column(name = "ratio")
 	private double dependencyIndex;
 
-
 	@JsonIgnore
-	@ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="county_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "county_id")
 	private County county;
 
-
-
 	@JsonIgnore
-	@ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="constituency_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "constituency_id")
 	private Constituency constituency;
-	
-	
-	
-	
-	
+
 	public int getCountyId() {
 		return countyId;
 	}
+	
+	
+	
+	
+	
 
 	public void setCountyId(int countyid) {
 		this.countyId = countyid;
@@ -113,7 +109,7 @@ public class CountyContainsConstituency implements Serializable {
 	public void setDependencyIndex(double dependencyIndex) {
 		this.dependencyIndex = dependencyIndex;
 	}
-/*
+
 	public County getCounty() {
 		return county;
 	}
@@ -129,5 +125,5 @@ public class CountyContainsConstituency implements Serializable {
 	public void setConstituency(Constituency constituency) {
 		this.constituency = constituency;
 	}
-*/
+
 }
