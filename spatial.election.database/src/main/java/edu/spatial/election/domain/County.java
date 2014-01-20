@@ -1,49 +1,70 @@
 package edu.spatial.election.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Type;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
 
 @Entity
-public class County {
+public class County extends ExportableGeometry {
 
 	@Id
 	@GeneratedValue
 	private long gid;
 
-	private int id_0;
+	@Column(name="id_0")
+	private int countryId;
 	
-	private String iso;
-	
-	private String name_0;
-	
-	private int id_1;
-	
-	private String name_1;
-	
-	private int id_2;
-	
-	private String name_2;
+	@Column(name="iso")
+	private String countryIso;
 
-	private int id_3;
-	
-	private String name_3;
+	@Column(name="name_0")
+	private String countryName;
 
-	private String nl_name_3;
-	
-	private String varname_3;
+	@Column(name="id_1")
+	private int stateId;
 
-	private String type_3;
+	@Column(name="name_1")
+	private String stateName;
 	
-	private String eng_type_3;
+
+	@Column(name="id_2")
+	private int districtId;
+
+	@Column(name="name_2")
+	private String districtName;
+
+	@Column(name="id_3")
+	private int countyId;
+
+	@Column(name="name_3")
+	private String countyName;
+
+	// NOT used:
+	// private String nl_name_3;
+	// private String varname_3;
+	// private String eng_type_3;
+
+	@Column(name="type_3")
+	private String countyTypeGerman;
 	
-	@Type(type="org.hibernate.spatial.GeometryType")
+	@Column(name="eng_type_3")
+	private String countyTypeEnglish;
+
+	@JsonIgnore
+    @Type(type="org.hibernate.spatial.GeometryType")
+	@Column(columnDefinition="Geometry")
 	private MultiPolygon geom;
 
+	
+	
+	
+	
 	public long getGid() {
 		return gid;
 	}
@@ -52,108 +73,92 @@ public class County {
 		this.gid = gid;
 	}
 
-	public int getId_0() {
-		return id_0;
+	public int getCountryId() {
+		return countryId;
 	}
 
-	public void setId_0(int id_0) {
-		this.id_0 = id_0;
+	public void setCountryId(int countryId) {
+		this.countryId = countryId;
 	}
 
-	public String getIso() {
-		return iso;
+	public String getCountryIso() {
+		return countryIso;
 	}
 
-	public void setIso(String iso) {
-		this.iso = iso;
+	public void setCountryIso(String countryIso) {
+		this.countryIso = countryIso;
 	}
 
-	public String getName_0() {
-		return name_0;
+	public String getCountryName() {
+		return countryName;
 	}
 
-	public void setName_0(String name_0) {
-		this.name_0 = name_0;
+	public void setCountryName(String countryName) {
+		this.countryName = countryName;
 	}
 
-	public int getId_1() {
-		return id_1;
+	public int getStateId() {
+		return stateId;
 	}
 
-	public void setId_1(int id_1) {
-		this.id_1 = id_1;
+	public void setStateId(int stateId) {
+		this.stateId = stateId;
 	}
 
-	public String getName_1() {
-		return name_1;
+	public String getStateName() {
+		return stateName;
 	}
 
-	public void setName_1(String name_1) {
-		this.name_1 = name_1;
+	public void setStateName(String stateName) {
+		this.stateName = stateName;
 	}
 
-	public int getId_2() {
-		return id_2;
+	public int getDistrictId() {
+		return districtId;
 	}
 
-	public void setId_2(int id_2) {
-		this.id_2 = id_2;
+	public void setDistrictId(int districtId) {
+		this.districtId = districtId;
 	}
 
-	public String getName_2() {
-		return name_2;
+	public String getProvinceName() {
+		return districtName;
 	}
 
-	public void setName_2(String name_2) {
-		this.name_2 = name_2;
+	public void setProvinceName(String provinceName) {
+		this.districtName = provinceName;
 	}
 
-	public int getId_3() {
-		return id_3;
+	public int getCountyId() {
+		return countyId;
 	}
 
-	public void setId_3(int id_3) {
-		this.id_3 = id_3;
+	public void setCountyId(int countyId) {
+		this.countyId = countyId;
 	}
 
-	public String getName_3() {
-		return name_3;
+	public String getCountyName() {
+		return countyName;
 	}
 
-	public void setName_3(String name_3) {
-		this.name_3 = name_3;
+	public void setCountyName(String countyName) {
+		this.countyName = countyName;
 	}
 
-	public String getNl_name_3() {
-		return nl_name_3;
+	public String getCountyTypeGerman() {
+		return countyTypeGerman;
 	}
 
-	public void setNl_name_3(String nl_name_3) {
-		this.nl_name_3 = nl_name_3;
+	public void setCountyTypeGerman(String countyTypeGerman) {
+		this.countyTypeGerman = countyTypeGerman;
 	}
 
-	public String getVarname_3() {
-		return varname_3;
+	public String getCountyTypeEnglish() {
+		return countyTypeEnglish;
 	}
 
-	public void setVarname_3(String varname_3) {
-		this.varname_3 = varname_3;
-	}
-
-	public String getType_3() {
-		return type_3;
-	}
-
-	public void setType_3(String type_3) {
-		this.type_3 = type_3;
-	}
-
-	public String getEng_type_3() {
-		return eng_type_3;
-	}
-
-	public void setEng_type_3(String eng_type_3) {
-		this.eng_type_3 = eng_type_3;
+	public void setCountyTypeEnglish(String countyTypeEnglish) {
+		this.countyTypeEnglish = countyTypeEnglish;
 	}
 
 	public MultiPolygon getGeom() {
@@ -163,4 +168,5 @@ public class County {
 	public void setGeom(MultiPolygon geom) {
 		this.geom = geom;
 	}
+
 }

@@ -3,7 +3,6 @@ package edu.spatial.election.database.dao;
 import edu.spatial.election.database.dao.impl.PostgisConstituencyDAO;
 import edu.spatial.election.database.dao.impl.PostgisCountyDAO;
 import edu.spatial.election.database.dao.impl.PostgisDAOFactory;
-import edu.spatial.election.database.dao.impl.PostgisStateDAO;
 
 
 
@@ -18,7 +17,6 @@ public abstract class SpatialDAOFactory {
 	// implement these methods.
 	public abstract PostgisCountyDAO getCountyDAO();
 	public abstract PostgisConstituencyDAO getConstituencyDAO();
-	public abstract PostgisStateDAO getStateDAO();
 
 	public static SpatialDAOFactory getDAOFactory(int whichFactory) {
 

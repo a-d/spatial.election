@@ -1,6 +1,5 @@
 package edu.spatial.election.database.dao.impl;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -35,16 +34,14 @@ public class PostgisConstituencyDAO implements ConstituencyDAO {
 		return out;
 	}
 
-	@SuppressWarnings("unchecked")
-	public Collection<Constituency> findConstituencyByState(String stateName) {
+	public List<Constituency> findConstituencyByState(String stateName) {
 		log.info("retrieving constituencies with state name " + stateName);
 
+		@SuppressWarnings("unchecked")
 		List<Constituency> out = (List<Constituency>) s.createCriteria(Constituency.class)
 					.add(Restrictions.eq("land_name", stateName))
 					.list();
 		return out;
-
-		// stmt.append("st_asgeojson(c.geom) as geometry ");
 	}
 
 	public void saveConstituency(Constituency c) {
@@ -60,7 +57,7 @@ public class PostgisConstituencyDAO implements ConstituencyDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Constituency> findConstituenciesByState() {
+	public List<Constituency> getConstituencies() {
 		return (List<Constituency>) s.createCriteria(Constituency.class).list();
 	}
 }

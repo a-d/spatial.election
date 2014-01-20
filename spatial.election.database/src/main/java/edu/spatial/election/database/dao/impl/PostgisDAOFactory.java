@@ -13,10 +13,4 @@ public class PostgisDAOFactory extends SpatialDAOFactory {
 	public PostgisConstituencyDAO getConstituencyDAO() {
 		return new PostgisConstituencyDAO();
 	}
-
-	@Override
-	public PostgisStateDAO getStateDAO() {
-		return new PostgisStateDAO();
-	}
-
 }
