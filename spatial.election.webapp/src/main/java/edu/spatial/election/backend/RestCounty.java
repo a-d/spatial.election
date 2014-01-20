@@ -1,6 +1,7 @@
 package edu.spatial.election.backend;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -9,12 +10,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
 import edu.spatial.election.database.DatabaseConnection;
 import edu.spatial.election.database.dao.CountyDAO;
 import edu.spatial.election.database.dao.SpatialDAOFactory;
 import edu.spatial.election.database.exceptions.CountyNotFoundException;
 import edu.spatial.election.domain.County;
+import edu.spatial.election.domain.CountyContainsConstituency;
 
 
 @Path("/county")
@@ -54,9 +57,7 @@ public class RestCounty {
 	@Path("{id}")
 	@Produces({MediaType.APPLICATION_JSON})
 	public County getCountyById(@PathParam("id") long id) throws CountyNotFoundException {
-		
-		Session s = DatabaseConnection.openSession();
-
+			Session s = DatabaseConnection.openSession();
 		// Create a DAO
 		CountyDAO countyDAO = f.getCountyDAO();
 		countyDAO.setConnection(s);

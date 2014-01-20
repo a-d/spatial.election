@@ -3,53 +3,20 @@ package edu.spatial.election.domain;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import javax.persistence.Table;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 
 
 @Entity
-//@IdClass(CountyContainsConstituency.CCCPK.class)
 @Table(name = "COUNTY_DEPENDING_CONSTITUENCY")
 public class CountyContainsConstituency implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
-
-	//@Embeddable
-	public static class CCCPK implements Serializable {
-		private static final long serialVersionUID = 1L;
-
-		protected int countyId;
-		protected int constituencyId;
-
-		public CCCPK(int countyId, int constituencyId) {
-			this.countyId = countyId;
-			this.constituencyId = constituencyId;
-		}
-		public CCCPK() {
-		}
-	}
-	
-	/*
-	@EmbeddedId
-	private CCCPK id;
-	*/
-	
-	
-
-   
-      
-      
 
 	@Id
 	@Column(name="county_Id")

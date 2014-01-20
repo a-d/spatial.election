@@ -1,17 +1,18 @@
 package edu.spatial.election.domain;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Type;
 
@@ -25,23 +26,23 @@ public class Constituency extends ExportableGeometry {
 	@Id
 	@GeneratedValue
 	private long gid;
-	
+
 	@Column(unique=true)
 	private int wkr_nr;
-	
+
 	private String wkr_name;
-	
+
 	private String land_nr;
-	
+
 	private String land_name;
 
 	@JsonIgnore
-    @Type(type="org.hibernate.spatial.GeometryType")
+	@Type(type="org.hibernate.spatial.GeometryType")
 	@Column(columnDefinition="Geometry")
 	private Point centerPoint;
 
 	@JsonIgnore
-    @Type(type="org.hibernate.spatial.GeometryType")
+	@Type(type="org.hibernate.spatial.GeometryType")
 	@Column(columnDefinition="Geometry")
 	private MultiPolygon geom;
 		
@@ -53,6 +54,14 @@ public class Constituency extends ExportableGeometry {
 	
 	
 	
+
+	@ElementCollection
+	@CollectionTable(
+			name="CONSTITUENCY_DATA",
+			joinColumns=@JoinColumn(name="GID")
+			)
+	private List<ConstituencyData> data;
+
 	
 	
 	public long getGid() {
@@ -94,7 +103,7 @@ public class Constituency extends ExportableGeometry {
 	public void setLand_name(String land_name) {
 		this.land_name = land_name;
 	}
-	
+
 	public MultiPolygon getGeom() {
 		return geom;
 	}
