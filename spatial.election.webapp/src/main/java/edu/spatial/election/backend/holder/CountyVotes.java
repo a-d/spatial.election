@@ -31,7 +31,7 @@ public class CountyVotes {
 			
 			constituencyIds.add(ccc.getConstituencyId());
 			List<ElectionResult> res = ccc.getConstituency().getElectionResults();
-			Double influence = ccc.getDependencyIndex();
+			Double influence = ccc.getAreaQuota();
 			
 			
 			for(ElectionResult result : res) {

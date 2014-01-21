@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
-@Table(name = "COUNTY_DEPENDING_CONSTITUENCY")
+@Table(name = "COUNTY_INTERSECTING_CONSTITUENCY")
 public class CountyContainsConstituency implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -34,11 +34,8 @@ public class CountyContainsConstituency implements Serializable {
 	@Column(name = "area_intersection")
 	private double areaIntersection;
 
-	@Column(name = "density")
-	private double populationDensity;
-
-	@Column(name = "ratio")
-	private double dependencyIndex;
+	@Column(name = "area_quota")
+	private double areaQuota;
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -97,22 +94,6 @@ public class CountyContainsConstituency implements Serializable {
 		this.areaIntersection = areaIntersection;
 	}
 
-	public double getPopulationDensity() {
-		return populationDensity;
-	}
-
-	public void setPopulationDensity(double populationDensity) {
-		this.populationDensity = populationDensity;
-	}
-
-	public double getDependencyIndex() {
-		return dependencyIndex;
-	}
-
-	public void setDependencyIndex(double dependencyIndex) {
-		this.dependencyIndex = dependencyIndex;
-	}
-
 	public County getCounty() {
 		return county;
 	}
@@ -127,6 +108,16 @@ public class CountyContainsConstituency implements Serializable {
 
 	public void setConstituency(Constituency constituency) {
 		this.constituency = constituency;
+	}
+
+
+	public double getAreaQuota() {
+		return areaQuota;
+	}
+
+
+	public void setAreaQuota(double areaQuota) {
+		this.areaQuota = areaQuota;
 	}
 
 }

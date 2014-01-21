@@ -75,7 +75,7 @@ public class County extends ExportableGeometry implements Serializable {
 	@JsonIgnore
 	@OneToMany
 	@JoinColumn(name="county_id", referencedColumnName="id_3")
-	@OrderBy("dependencyIndex")
+	@OrderBy("areaQuota")
 	private List<CountyContainsConstituency> dependingConstituencies = new LinkedList<CountyContainsConstituency>();
 	
 	@JsonIgnore

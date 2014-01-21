@@ -55,7 +55,7 @@ public class Constituency extends ExportableGeometry implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch=FetchType.LAZY)
 	@JoinColumn(name="constituency_id", referencedColumnName="wkr_nr")
-	@OrderBy("dependencyIndex")
+	@OrderBy("areaQuota")
 	private List<CountyContainsConstituency> dependingCounties = new LinkedList<CountyContainsConstituency>();
 	
 	
