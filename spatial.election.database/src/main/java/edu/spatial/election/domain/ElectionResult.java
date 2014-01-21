@@ -25,6 +25,8 @@ public class ElectionResult implements Serializable {
 	private long constituencyId;
 	
 	private long votes;
+	
+	private double quota;
 
 	public long getPartyId() {
 		return partyId;
@@ -33,13 +35,11 @@ public class ElectionResult implements Serializable {
 
 
 	@JsonIgnore
-	@Transient
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "constituencyId")
 	private Constituency constituency;
 
 	@JsonIgnore
-	@Transient
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "partyId")
 	private Party party;
@@ -79,5 +79,13 @@ public class ElectionResult implements Serializable {
 
 	public void setParty(Party party) {
 		this.party = party;
+	}
+
+	public double getQuota() {
+		return quota;
+	}
+
+	public void setQuota(double quota) {
+		this.quota = quota;
 	}
 }

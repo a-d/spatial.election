@@ -30,4 +30,9 @@ public class Party {
 	public void setPartyName(String partyName) {
 		this.partyName = partyName;
 	}
+	
+	@Override
+	public String toString() {
+		return getPartyName();
+	}
 }

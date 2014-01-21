@@ -36,7 +36,7 @@ public class CountyVotesMap {
 				
 				Party party = result.getParty();
 				Double oldVal = countyResults.get(party);
-				Double newVal = (oldVal==null ? 0.0 : oldVal) + influence * result.getVotes();
+				Double newVal = (oldVal==null ? 0.0 : oldVal) + influence * result.getQuota();
 				
 				countyResults.put(party, newVal);
 			}
