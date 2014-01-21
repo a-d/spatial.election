@@ -1,9 +1,8 @@
 package edu.spatial.election.domain;
 
-import java.util.HashSet;
+import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -12,14 +11,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Type;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
 
+import edu.spatial.election.domain.kind.ExportableGeometry;
+
+@SuppressWarnings("serial")
 @Entity
-public class County extends ExportableGeometry {
+public class County extends ExportableGeometry implements Serializable {
 
 	@Id
 	@GeneratedValue
@@ -71,8 +74,9 @@ public class County extends ExportableGeometry {
 
 	@JsonIgnore
 	@OneToMany
-	@JoinColumn(name="county_id")
-	private Set<CountyContainsConstituency> dependingConstituencies = new HashSet<CountyContainsConstituency>();
+	@JoinColumn(name="county_id", referencedColumnName="id_3")
+	@OrderBy("dependencyIndex")
+	private List<CountyContainsConstituency> dependingConstituencies = new LinkedList<CountyContainsConstituency>();
 	
 	@JsonIgnore
 	@ElementCollection
@@ -81,6 +85,7 @@ public class County extends ExportableGeometry {
 			joinColumns=@JoinColumn(name="GID")
 			)
 	private List<CountyData> data;
+	
 	
 	
 	public long getGid() {
@@ -203,12 +208,11 @@ public class County extends ExportableGeometry {
 		this.districtName = districtName;
 	}
 
-	public Set<CountyContainsConstituency> getDependingConstituencies() {
+	public List<CountyContainsConstituency> getDependingConstituencies() {
 		return dependingConstituencies;
 	}
 
-	public void setDependingConstituencies(
-			Set<CountyContainsConstituency> dependingConstituencies) {
+	public void setDependingConstituencies(List<CountyContainsConstituency> dependingConstituencies) {
 		this.dependingConstituencies = dependingConstituencies;
 	}
 }

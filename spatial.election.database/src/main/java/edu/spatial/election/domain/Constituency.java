@@ -1,8 +1,8 @@
 package edu.spatial.election.domain;
 
-import java.util.HashSet;
+import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -19,9 +20,12 @@ import org.hibernate.annotations.Type;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 
+import edu.spatial.election.domain.kind.ExportableGeometry;
+
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "CONSTITUENCY")
-public class Constituency extends ExportableGeometry {
+public class Constituency extends ExportableGeometry implements Serializable {
 
 	@Id
 	@GeneratedValue
@@ -49,10 +53,17 @@ public class Constituency extends ExportableGeometry {
 
 	@JsonIgnore
 	@OneToMany
-	@JoinColumn(name="constituency_id")
-	private Set<CountyContainsConstituency> dependingCounties = new HashSet<CountyContainsConstituency>();
+	@JoinColumn(name="constituency_id", referencedColumnName="wkr_nr")
+	@OrderBy("dependencyIndex")
+	private List<CountyContainsConstituency> dependingCounties = new LinkedList<CountyContainsConstituency>();
 	
 	
+	@JsonIgnore
+	@OneToMany
+	@JoinColumn(name="constituencyId", referencedColumnName="gid")
+	@OrderBy("votes")
+	private List<ElectionResult> electionResults = new LinkedList<ElectionResult>();
+
 	
 
 	@JsonIgnore
@@ -129,12 +140,20 @@ public class Constituency extends ExportableGeometry {
 		this.centerPoint = centerPoint;
 	}
 
-	public Set<CountyContainsConstituency> getDependingCounties() {
+	public List<CountyContainsConstituency> getDependingCounties() {
 		return dependingCounties;
 	}
 
-	public void setDependingCounties(
-			Set<CountyContainsConstituency> dependingCounties) {
+	public void setDependingCounties(List<CountyContainsConstituency> dependingCounties) {
 		this.dependingCounties = dependingCounties;
+	}
+
+
+	public List<ElectionResult> getElectionResults() {
+		return electionResults;
+	}
+
+	public void setElectionResults(List<ElectionResult> electionResults) {
+		this.electionResults = electionResults;
 	}
 }

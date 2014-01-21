@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
@@ -49,15 +50,17 @@ public class CountyContainsConstituency implements Serializable {
 	@JoinColumn(name = "constituency_id")
 	private Constituency constituency;
 
+	
+	
+	
+	
+	
+	
 	public int getCountyId() {
 		return countyId;
 	}
 	
 	
-	
-	
-	
-
 	public void setCountyId(int countyid) {
 		this.countyId = countyid;
 	}

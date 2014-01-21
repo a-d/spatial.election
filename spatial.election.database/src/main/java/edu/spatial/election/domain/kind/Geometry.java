@@ -1,4 +1,4 @@
-package edu.spatial.election.domain;
+package edu.spatial.election.domain.kind;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
 

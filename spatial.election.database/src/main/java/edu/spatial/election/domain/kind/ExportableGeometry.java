@@ -1,4 +1,4 @@
-package edu.spatial.election.domain;
+package edu.spatial.election.domain.kind;
 
 import javax.persistence.Transient;
 

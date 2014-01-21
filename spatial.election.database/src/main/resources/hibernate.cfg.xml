@@ -26,5 +26,8 @@
 		<mapping class="edu.spatial.election.domain.Constituency" />
 		<mapping class="edu.spatial.election.domain.County" />
 		<mapping class="edu.spatial.election.domain.CountyContainsConstituency" />
+		<mapping class="edu.spatial.election.domain.Party" />
+		<mapping class="edu.spatial.election.domain.ElectionResult" />
+		<mapping class="edu.spatial.election.domain.keys.ElectionResultKey" />
 	</session-factory>
 </hibernate-configuration>
