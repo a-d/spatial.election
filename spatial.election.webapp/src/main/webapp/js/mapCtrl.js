@@ -27,7 +27,7 @@ function mapCtrl($scope, d3, Counties) {
 		
 		vis.selectAll("g")
 			.data(wkrs).enter().append("g")
-			.attr("id", function(d) { return d.gid; })
+			.attr("id", function(d) { return d.county.gid; })
 			.attr("fill", function(d) {
 				return "black"; //color(d.wkr_name)
 			})
@@ -35,17 +35,28 @@ function mapCtrl($scope, d3, Counties) {
 			.attr("stroke-width", 2)
 			
 			.on("click", (function(e) {
-				var txt = "";
-				for(key in e) {
-					if(typeof e[key]=="string" || typeof e[key]=="number" || typeof e[key]=="boolean") {
-						txt += key + " = " + e[key] + "\n";
+
+				var txt = "Properties:\n";
+				for(key in e.county) {
+					if(typeof e.county[key]=="string" || typeof e.county[key]=="number" || typeof e.county[key]=="boolean") {
+						txt += key + " = " + e.county[key] + "\n";
 					}
 				}
+				
+				txt += "\nResults:\n"
+				for(key in e.results) {
+					if(typeof e.results[key]=="string" || typeof e.results[key]=="number" || typeof e.results[key]=="boolean") {
+						txt += key + " = " + e.results[key] + "\n";
+					}
+				}
+				
+				txt += "\nConstituency-Ids: "+e.constituencyIds;
+			
 				alert(txt);
 			}))
 
 			.selectAll("polygon")
-				.data(function(d) { return d.coordinates; }).enter().append("polygon")
+				.data(function(d) { return d.county.coordinates; }).enter().append("polygon")
 				.attr("points",
 					function(d) {
 						return d.map(function(d) {

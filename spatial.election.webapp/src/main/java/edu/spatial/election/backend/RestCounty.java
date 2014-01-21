@@ -9,7 +9,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.hibernate.Session;
-import edu.spatial.election.backend.holder.CountyVotesMap;
+import edu.spatial.election.backend.holder.CountyVotes;
 import edu.spatial.election.database.DatabaseConnection;
 import edu.spatial.election.database.dao.CountyDAO;
 import edu.spatial.election.database.dao.SpatialDAOFactory;
@@ -53,7 +53,7 @@ public class RestCounty {
 	@GET
 	@Path("/votes/{level}")
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<CountyVotesMap> getAllCountiesWithResultsByDetail(@PathParam("level") double level) {
+	public List<CountyVotes> getAllCountiesWithResultsByDetail(@PathParam("level") double level) {
 
 		Session s = DatabaseConnection.openSession();
 
@@ -61,13 +61,13 @@ public class RestCounty {
 		CountyDAO countyDAO = f.getCountyDAO();
 		countyDAO.setConnection(s);
 
-		List<CountyVotesMap> out = new LinkedList<CountyVotesMap>();
+		List<CountyVotes> out = new LinkedList<CountyVotes>();
 		for(County c : countyDAO.getCounties())
 		{
 			c.setGeometryDetail(level);
 			c.getGeometryArray();
 			
-			CountyVotesMap result = new CountyVotesMap(c);
+			CountyVotes result = new CountyVotes(c);
 			out.add(result);
 		}
 		

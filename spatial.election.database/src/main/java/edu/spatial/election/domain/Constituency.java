@@ -7,6 +7,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -52,14 +53,14 @@ public class Constituency extends ExportableGeometry implements Serializable {
 		
 
 	@JsonIgnore
-	@OneToMany
+	@OneToMany(fetch=FetchType.LAZY)
 	@JoinColumn(name="constituency_id", referencedColumnName="wkr_nr")
 	@OrderBy("dependencyIndex")
 	private List<CountyContainsConstituency> dependingCounties = new LinkedList<CountyContainsConstituency>();
 	
 	
 	@JsonIgnore
-	@OneToMany
+	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="constituencyId", referencedColumnName="gid")
 	@OrderBy("votes")
 	private List<ElectionResult> electionResults = new LinkedList<ElectionResult>();

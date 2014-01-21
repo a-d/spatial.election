@@ -24,7 +24,7 @@ angular.module('myApp.services', ['ngResource']) //
 
 angular.module('myApp.services')
 .factory('Counties', [ '$resource', function($resource) {
-	var baseurl = 'backend/county/detail/';
+	var baseurl = 'backend/county/votes/';
 	return $resource(baseurl + ':level/', {
 		id : '@level'
 	},

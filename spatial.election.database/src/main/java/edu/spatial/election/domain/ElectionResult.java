@@ -8,8 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 @SuppressWarnings("serial")
@@ -26,8 +24,6 @@ public class ElectionResult implements Serializable {
 	
 	private long votes;
 	
-	private double quota;
-
 	public long getPartyId() {
 		return partyId;
 	}
@@ -79,13 +75,5 @@ public class ElectionResult implements Serializable {
 
 	public void setParty(Party party) {
 		this.party = party;
-	}
-
-	public double getQuota() {
-		return quota;
-	}
-
-	public void setQuota(double quota) {
-		this.quota = quota;
 	}
 }
