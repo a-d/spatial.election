@@ -55,6 +55,7 @@ public class Constituency extends ExportableGeometry {
 	
 	
 
+	@JsonIgnore
 	@ElementCollection
 	@CollectionTable(
 			name="CONSTITUENCY_DATA",
@@ -112,6 +113,14 @@ public class Constituency extends ExportableGeometry {
 		this.geom = geom;
 	}
 
+	public List<ConstituencyData> getData() {
+		return data;
+	}
+
+	public void setData(List<ConstituencyData> data) {
+		this.data = data;
+	}
+
 	public Point getCenterPoint() {
 		return centerPoint;
 	}
@@ -128,6 +137,4 @@ public class Constituency extends ExportableGeometry {
 			Set<CountyContainsConstituency> dependingCounties) {
 		this.dependingCounties = dependingCounties;
 	}
-
-	
 }

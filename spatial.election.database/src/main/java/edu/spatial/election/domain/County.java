@@ -74,6 +74,7 @@ public class County extends ExportableGeometry {
 	@JoinColumn(name="county_id")
 	private Set<CountyContainsConstituency> dependingConstituencies = new HashSet<CountyContainsConstituency>();
 	
+	@JsonIgnore
 	@ElementCollection
 	@CollectionTable(
 			name="COUTNY_DATA",
@@ -186,6 +187,14 @@ public class County extends ExportableGeometry {
 		this.geom = geom;
 	}
 
+	public List<CountyData> getData() {
+		return data;
+	}
+
+	public void setData(List<CountyData> data) {
+		this.data = data;
+	}
+
 	public String getDistrictName() {
 		return districtName;
 	}
@@ -202,6 +211,4 @@ public class County extends ExportableGeometry {
 			Set<CountyContainsConstituency> dependingConstituencies) {
 		this.dependingConstituencies = dependingConstituencies;
 	}
-
-
 }
