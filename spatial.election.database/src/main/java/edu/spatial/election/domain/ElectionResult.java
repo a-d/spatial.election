@@ -40,7 +40,7 @@ public class ElectionResult implements Serializable {
 	private Constituency constituency;
 
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "partyId")
 	private Party party;
 	
