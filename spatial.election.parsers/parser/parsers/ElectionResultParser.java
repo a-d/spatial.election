@@ -14,6 +14,10 @@ public class ElectionResultParser extends SimpleParser{
 	
 	private String partiesOutput = "/home/martin/Desktop/parties.csv";
 
+	/**
+	 * inputFile format: ConstituencyId; firstVoteCurrent; firstVoteLastYear; secondVoteCurrent; secondVoteLastYear 
+	 * 
+	 */
 	public ElectionResultParser(String inputFileName, String outputFileName) {
 		super(inputFileName, outputFileName);
 	}
