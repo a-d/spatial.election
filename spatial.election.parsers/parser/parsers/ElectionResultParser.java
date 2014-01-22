@@ -15,7 +15,7 @@ public class ElectionResultParser extends SimpleParser{
 	private String partiesOutput = "/home/martin/Desktop/parties.csv";
 
 	/**
-	 * inputFile format: ConstituencyId; firstVoteCurrent; firstVoteLastYear; secondVoteCurrent; secondVoteLastYear 
+	 * inputFile format: ConstituencyId; [firstVoteCurrent; firstVoteLastYear; secondVoteCurrent; secondVoteLastYear]*
 	 * 
 	 */
 	public ElectionResultParser(String inputFileName, String outputFileName) {
@@ -50,19 +50,26 @@ public class ElectionResultParser extends SimpleParser{
 			while ((nextLine = reader.readNext()) != null) {
 				// nextLine[] is an array of values from the line
 				String constituencyId = nextLine[0];
-				for (int i = 1; i < nextLine.length; i += 4) { // for now zweitstimmen are discarded
+				for (int i = 1; i < nextLine.length; i += 4) {
 
-					String[] temp = new String[4];
+					String[] temp = new String[5];
 
 					temp[0] = constituencyId;
 					temp[1] = String.valueOf((i -1)/4);
 
-					if (!nextLine[i].equals("")) {
+					if (!nextLine[i].equals("")) { // erststimme
 						temp[2] = nextLine[i];	    				
 					} else {
 						temp[2] = String.valueOf(0);
 					}
-					temp[3] = String.valueOf(2013); // extract parameter later
+					
+					if (!nextLine[i+1].equals("")) { // zweitstimme
+						temp[3] = nextLine[i+1];	    				
+					} else {
+						temp[3] = String.valueOf(0);
+					}					
+					
+					temp[4] = String.valueOf(2013); // TODO extract parameter later
 					
 					result.add(temp);
 				}

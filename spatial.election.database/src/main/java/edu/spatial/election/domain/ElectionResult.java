@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 @SuppressWarnings("serial")
@@ -22,7 +23,9 @@ public class ElectionResult implements Serializable {
 	@Id
 	private long constituencyId;
 	
-	private long votes;
+	private long primaryVotes;
+	
+	private long secondaryVotes;
 	
 	public long getPartyId() {
 		return partyId;
@@ -53,12 +56,20 @@ public class ElectionResult implements Serializable {
 		this.constituencyId = constituencyId;
 	}
 
-	public long getVotes() {
-		return votes;
+	public long getPrimaryVotes() {
+		return primaryVotes;
 	}
 
-	public void setVotes(long votes) {
-		this.votes = votes;
+	public void setPrimaryVotes(long primaryVotes) {
+		this.primaryVotes = primaryVotes;
+	}
+	
+	public long getSecondaryVotes() {
+		return secondaryVotes;
+	}
+
+	public void setSecondaryVotes(long secondaryVotes) {
+		this.secondaryVotes = secondaryVotes;
 	}
 
 	public Constituency getConstituency() {
