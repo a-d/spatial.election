@@ -27,9 +27,10 @@ public class ElectionResult implements Serializable {
 	
 	private long secondaryVotes;
 	
-	public long getPartyId() {
-		return partyId;
-	}
+	
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
+	private Election election;
 	
 
 
@@ -44,6 +45,13 @@ public class ElectionResult implements Serializable {
 	private Party party;
 	
 
+
+	
+	public long getPartyId() {
+		return partyId;
+	}
+	
+	
 	public void setPartyId(long partyId) {
 		this.partyId = partyId;
 	}
@@ -86,5 +94,15 @@ public class ElectionResult implements Serializable {
 
 	public void setParty(Party party) {
 		this.party = party;
+	}
+
+
+	public Election getElection() {
+		return election;
+	}
+
+
+	public void setElection(Election election) {
+		this.election = election;
 	}
 }

@@ -29,5 +29,6 @@
 		<mapping class="edu.spatial.election.domain.Party" />
 		<mapping class="edu.spatial.election.domain.ElectionResult" />
 		<mapping class="edu.spatial.election.domain.keys.ElectionResultKey" />
+		<mapping class="edu.spatial.election.domain.Election" />
 	</session-factory>
 </hibernate-configuration>
