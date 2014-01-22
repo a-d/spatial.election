@@ -12,7 +12,7 @@ import edu.spatial.election.domain.Party;
 public class CountyVotes {
 
 	private County county;
-	private HashMap<Party, Double> results;
+	private HashMap<Party, Double[]> results;
 	private LinkedList<Integer> constituencyIds = new LinkedList<Integer>();
 
 
@@ -26,7 +26,7 @@ public class CountyVotes {
 	private void init() {
 		
 		// aggregate all results of containing constituencies
-		HashMap<Party, Double> countyResults = new HashMap<Party, Double>();
+		HashMap<Party, Double[]> countyResults = new HashMap<Party, Double[]>();
 		for(CountyContainsConstituency ccc : county.getDependingConstituencies()) {
 			
 			constituencyIds.add(ccc.getConstituencyId());
@@ -37,10 +37,14 @@ public class CountyVotes {
 			for(ElectionResult result : res) {
 				
 				Party party = result.getParty();
-				Double oldVal = countyResults.get(party);
-				Double newVal = (oldVal==null ? 0.0 : oldVal) + influence * result.getVotes();
-				
-				countyResults.put(party, newVal);
+				Double[] val = countyResults.get(party);
+				if(val==null)
+				{
+					val = new Double[] { 0.0, 0.0 };
+				}
+				val[0] += influence * result.getPrimaryVotes();
+				val[1] += influence * result.getSecondaryVotes();
+				countyResults.put(party, val);
 			}
 		}
 		
@@ -54,7 +58,7 @@ public class CountyVotes {
 	public County getCounty() {
 		return county;
 	}
-	public HashMap<Party, Double> getResults() {
+	public HashMap<Party, Double[]> getResults() {
 		return results;
 	}
 	

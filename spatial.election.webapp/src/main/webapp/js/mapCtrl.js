@@ -36,16 +36,20 @@ function mapCtrl($scope, d3, Counties) {
 			
 			.on("click", (function(e) {
 
+				var isOkValue = function(k) {
+					return k!=null && (typeof k=="string" || typeof k=="number" || typeof k=="boolean" || (Object.prototype.toString.call(k) === '[object Array]' && isOkValue(k[0])));
+				}
+				
 				var txt = "Properties:\n";
 				for(key in e.county) {
-					if(typeof e.county[key]=="string" || typeof e.county[key]=="number" || typeof e.county[key]=="boolean") {
+					if(isOkValue(e.county[key])) {
 						txt += key + " = " + e.county[key] + "\n";
 					}
 				}
 				
 				txt += "\nResults:\n"
 				for(key in e.results) {
-					if(typeof e.results[key]=="string" || typeof e.results[key]=="number" || typeof e.results[key]=="boolean") {
+					if(isOkValue(e.results[key]) {
 						txt += key + " = " + e.results[key] + "\n";
 					}
 				}
