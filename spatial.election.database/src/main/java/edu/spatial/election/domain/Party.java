@@ -11,16 +11,20 @@ public class Party {
 
 	@Id
 	@GeneratedValue
-	private long partyID;
+	private long partyId;
 	
 	private String partyName;
+	
+	private String color;
+	
+	
 
-	public long getPartyID() {
-		return partyID;
+	public long getPartyId() {
+		return partyId;
 	}
 
-	public void setPartyID(long partyID) {
-		this.partyID = partyID;
+	public void setPartyId(long partyId) {
+		this.partyId = partyId;
 	}
 
 	public String getPartyName() {
@@ -34,5 +38,13 @@ public class Party {
 	@Override
 	public String toString() {
 		return getPartyName();
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 }

@@ -35,7 +35,25 @@ angular.module('myApp.services')
             	var dat = angular.fromJson(data);
             	return dat.list ? dat.list : dat;
             },
-            isArray: true //since your list property is an array
+            isArray: true
+        }
+    });
+}]);
+
+
+angular.module('myApp.services')
+.factory('Parties', [ '$resource', function($resource) {
+	var baseurl = 'backend/party/';
+	return $resource(baseurl, { },
+    {
+        'get': {
+            method: 'GET',
+            cache : true,
+            transformResponse: function (data) {
+            	var dat = angular.fromJson(data);
+            	return dat.list ? dat.list : dat;
+            },
+            isArray: true
         }
     });
 }]);

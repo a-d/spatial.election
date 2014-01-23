@@ -1,8 +1,11 @@
 package edu.spatial.election.domain;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -62,8 +65,7 @@ public class Constituency extends ExportableGeometry implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="constituencyId", referencedColumnName="gid")
-	@OrderBy("votes")
-	private List<ElectionResult> electionResults = new LinkedList<ElectionResult>();
+	private Set<ElectionResult> electionResults = new HashSet<ElectionResult>();
 
 	
 
@@ -150,11 +152,11 @@ public class Constituency extends ExportableGeometry implements Serializable {
 	}
 
 
-	public List<ElectionResult> getElectionResults() {
+	public Set<ElectionResult> getElectionResults() {
 		return electionResults;
 	}
 
-	public void setElectionResults(List<ElectionResult> electionResults) {
+	public void setElectionResults(Set<ElectionResult> electionResults) {
 		this.electionResults = electionResults;
 	}
 }

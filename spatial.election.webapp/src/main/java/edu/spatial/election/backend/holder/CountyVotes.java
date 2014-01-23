@@ -1,9 +1,8 @@
 package edu.spatial.election.backend.holder;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
-
 import edu.spatial.election.domain.County;
 import edu.spatial.election.domain.CountyContainsConstituency;
 import edu.spatial.election.domain.ElectionResult;
@@ -12,9 +11,10 @@ import edu.spatial.election.domain.Party;
 public class CountyVotes {
 
 	private County county;
-	private HashMap<Party, Double[]> results;
+	private Collection<CountyVote> results = new LinkedList<CountyVote>();
 	private LinkedList<Integer> constituencyIds = new LinkedList<Integer>();
 
+	
 
 	public CountyVotes(County county) {
 		this.county = county;
@@ -26,29 +26,30 @@ public class CountyVotes {
 	private void init() {
 		
 		// aggregate all results of containing constituencies
-		HashMap<Party, Double[]> countyResults = new HashMap<Party, Double[]>();
+		HashMap<Party, CountyVote> countyResults = new HashMap<Party, CountyVote>();
 		for(CountyContainsConstituency ccc : county.getDependingConstituencies()) {
 			
 			constituencyIds.add(ccc.getConstituencyId());
-			List<ElectionResult> res = ccc.getConstituency().getElectionResults();
+			Collection<ElectionResult> res = ccc.getConstituency().getElectionResults();
 			Double influence = ccc.getAreaQuota();
 			
 			
 			for(ElectionResult result : res) {
 				
 				Party party = result.getParty();
-				Double[] val = countyResults.get(party);
+				CountyVote val = countyResults.get(party);
 				if(val==null)
 				{
-					val = new Double[] { 0.0, 0.0 };
+					countyResults.put(party, new CountyVote(result, influence));
 				}
-				val[0] += influence * result.getPrimaryVotes();
-				val[1] += influence * result.getSecondaryVotes();
-				countyResults.put(party, val);
+				else
+				{
+					val.add(result, influence);
+				}
 			}
 		}
 		
-		this.results = countyResults;
+		this.results = countyResults.values();
 	}
 	
 	public LinkedList<Integer> getConstituencyIds() {
@@ -58,7 +59,7 @@ public class CountyVotes {
 	public County getCounty() {
 		return county;
 	}
-	public HashMap<Party, Double[]> getResults() {
+	public Collection<CountyVote> getResults() {
 		return results;
 	}
 	
