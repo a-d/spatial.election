@@ -20,6 +20,11 @@ public class PostgisElectionResultDAO implements ElectionResultDAO {
 	public void setConnection(Session s) {
 		this.s = s;
 	}
+	
+	public void createElectionResult(ElectionResult electionResult) {
+		s.save(electionResult);
+	}
+
 	public ElectionResult findElectionResultById(ElectionResultKey id) throws ElectionResultNotFoundException {
 		log.info("retrieving ElectionResult with ElectionResultKey " + id.toString());
 
