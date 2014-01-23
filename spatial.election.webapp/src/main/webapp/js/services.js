@@ -6,23 +6,8 @@ angular.module('myApp.services', ['ngResource']) //
 	var baseurl = 'backend/constituency/';
 	return $resource(baseurl + ':id/', {
 		id : '@id'
-	}, {
-		add_new_attribute : {
-			method : 'POST',
-			url : baseurl + ':id/attributes/:attribute_key_id/',
-			headers : {
-				'Content-Type' : 'text/plain'
-			}
-		},
-		del_attribute : {
-			method : 'DELETE',
-			url : baseurl + ':id/attributes/:attribute_value_id/'
-		}
 	});
-}]);
-
-
-angular.module('myApp.services')
+}])
 .factory('Counties', [ '$resource', function($resource) {
 	var baseurl = 'backend/county/votes/';
 	return $resource(baseurl + ':level/', {
@@ -38,10 +23,7 @@ angular.module('myApp.services')
             isArray: true
         }
     });
-}]);
-
-
-angular.module('myApp.services')
+}])
 .factory('Parties', [ '$resource', function($resource) {
 	var baseurl = 'backend/party/';
 	return $resource(baseurl, { },
