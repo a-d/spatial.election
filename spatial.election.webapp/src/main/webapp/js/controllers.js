@@ -1,3 +1,5 @@
+var VOTE = "votes1";
+
 angular.module('myApp.controllers', [])
 .controller('mapCtrl', function mapCtrl($scope, d3, Counties, Parties) {
 
@@ -44,20 +46,8 @@ angular.module('myApp.controllers', [])
 		width = 800,
 		height = 600,
 		vis = d3.select("body").append("svg").attr("width", width).attr("height", height),
-		allBaseLines = [],
 		color = d3.scale.category10(),
-		
-		/*
-		 * constituencies:
-		scaleX = d3.scale.linear().domain([ 200000, 1000000 ]).range([ 0, width ]),
-		scaleY = d3.scale.linear().domain([ 5203000, 6159000 ]).range([ height, 0 ]),
-		*/
-		
-		/*
-		 * counties:
-		 */
-		scaleX = d3.scale.linear().domain([ 5, 17]).range([ 0, width ]),
-		scaleY = d3.scale.linear().domain([ 47, 56]).range([ height, 0 ]);
+		projection = d3.geo.mercator().center([10.45, 51.16]).scale(2500).translate([width/2,height/2]);
 
 		
 		vis.selectAll("g")
@@ -69,9 +59,7 @@ angular.module('myApp.controllers', [])
 				return getFromPartyIterator(
 						function(party) { return party.partyId==pId; },
 						function(party) {
-							if(party==null)
-							return "#ffffff"
-							return party.color
+							return party==null ? "#ffffff": party.color
 						});
 			})
 			.attr("fill-opacity", function(d) {
@@ -112,8 +100,8 @@ angular.module('myApp.controllers', [])
 				.data(function(d) { return d.county.coordinates; }).enter().append("polygon")
 				.attr("points",
 					function(d) {
-						return d.map(function(d) {
-							return [ scaleX(d[0]), scaleY(d[1]) ].join(",");
+						return window.xyz = d.map(function(d) {
+							return projection(d).join(","); //[ scaleX(d[0]), scaleY(d[1]) ].join(",");
 						}).join(" ");
 					});
 	};
