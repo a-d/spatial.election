@@ -10,9 +10,14 @@ import java.util.List;
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
-public class ElectionResultParser extends SimpleParser{
-	
+public class ElectionResultParser extends AbstractParser{
+
 	private String partiesOutput = "/home/martin/Desktop/parties.csv";
+	private static final int CONSTITUENCY_ID = 0;
+	private static final int PARTY_ID = 1;
+	private static final int ELECTION_ID = 2;
+	private static final int FIRST_VOTE = 3;
+	private static final int SECOND_VOTE = 4;
 
 	/**
 	 * inputFile format: ConstituencyId; [firstVoteCurrent; firstVoteLastYear; secondVoteCurrent; secondVoteLastYear]*
@@ -30,7 +35,7 @@ public class ElectionResultParser extends SimpleParser{
 
 		String [] header;
 		String [] nextLine;
-		
+
 		CSVReader reader;
 
 		try {
@@ -54,41 +59,38 @@ public class ElectionResultParser extends SimpleParser{
 
 					String[] temp = new String[5];
 
-					temp[0] = constituencyId;
-					temp[1] = String.valueOf((i -1)/4);
+					temp[CONSTITUENCY_ID] = constituencyId;
+					temp[PARTY_ID] = String.valueOf((i -1)/4); // partyId
+					temp[ELECTION_ID] = String.valueOf(1); 
 
 					if (!nextLine[i].equals("")) { // erststimme
-						temp[2] = nextLine[i];	    				
+						temp[FIRST_VOTE] = nextLine[i];	    				
 					} else {
-						temp[2] = String.valueOf(0);
+						temp[FIRST_VOTE] = String.valueOf(0);
 					}
-					
-					if (!nextLine[i+1].equals("")) { // zweitstimme
-						temp[3] = nextLine[i+1];	    				
+
+					if (!nextLine[i+2].equals("")) { // zweitstimme
+						temp[SECOND_VOTE] = nextLine[i+1];	    				
 					} else {
-						temp[3] = String.valueOf(0);
-					}					
-					
-					temp[4] = String.valueOf(2013); // TODO extract parameter later
-					
+						temp[SECOND_VOTE] = String.valueOf(0);
+					}
+
 					result.add(temp);
 				}
 			}
 
 			reader.close();
-			
+
 			CSVWriter writer2 = new CSVWriter(new FileWriter(getOutputFileName()), ',');
 			writer2.writeAll(result);
 			writer2.close();
-		
+
 		} catch (FileNotFoundException fileNotFound) {
 			fileNotFound.printStackTrace();
 		}  catch (IOException io) {
 			io.printStackTrace();
 		}
 
-
-		System.out.println(result.size());
 		return result;
 	}
 }
