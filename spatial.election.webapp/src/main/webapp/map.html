@@ -7,16 +7,28 @@
 <link rel="stylesheet" href="css/app.css">
 </head>
 <body ng-controller="mapCtrl">
+count: {{count}}
+
+<div id="status">
+	<div>GID : {{gid}}</div>
+	<div>State : {{state}}</div>
+	<div>District : {{district}}</div>
+	<div>County : {{county}}</div>
+	<div>Province : {{province}}</div>
+	<div>Results : {{results}}</div>
+	<div>Constituencies : {{constituencyIds}}</div>
+</div>
+
+<div id="mysvg"></div>
 
 
-	<script src="lib/angular/angular.js"></script>
-	<script src="lib/angular/angular-resource.js"></script>
-	<script src="js/app.js"></script>
-	<script src="js/services.js"></script>
-	<script src="js/controllers.js"></script>
-	<script src="js/directives.js"></script>
-	<script src="js/d3.js"></script>
-
+<script src="lib/angular/angular.js"></script>
+<script src="lib/angular/angular-resource.js"></script>
+<script src="js/app.js"></script>
+<script src="js/services.js"></script>
+<script src="js/controllers.js"></script>
+<script src="js/directives.js"></script>
+<script src="js/d3.js"></script>
 
 </body>
 </html>

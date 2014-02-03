@@ -9,30 +9,35 @@ angular.module('myApp.controllers', [])
 		});
 	});
 
+	var showCounty = function(
+			gid,			// 158
+			state,			// [3, "Berlin"]
+			district,		// [12, "Berlin"]
+			county,			// [141, "Berlin"]
+			province,		// "Berlin"
+			results,		// { "SPD" : [123Erststimme, 456Zweitstimme] }
+			constituencyIds	// [ 58, 63, 61, 62, 59, ... ]
+	) {
+		$scope.gid = gid;
+		$scope.state = state;
+		$scope.district = district;
+		$scope.county = county;
+		$scope.province = province;
+		$scope.results = results;
+		$scope.constituencyIds = constituencyIds;
+		
+		$scope.$apply();
+	}
+	
 	
 	var displayWahlkreise = function (wkrs, parties) {
-
+		
 		var strokeWidth = function(scale) {
 			return 0.5 + 2 / scale;
 		}
-		
-		
-		
-		var showCounty = function(
-				gid,			// 158
-				state,			// [3, "Berlin"]
-				district,		// [12, "Berlin"]
-				county,			// [141, "Berlin"]
-				province,		// "Berlin"
-				results,		// { "SPD" : [123Erststimme, 456Zweitstimme] }
-				constituencyIds	// [ 58, 63, 61, 62, 59, ... ]
-		) {
-			alert(gid+"\n"+state+"\n"+district+"\n"+county+"\n"+province+"\n"+results+"\n"+constituencyIds+"\n");
-		}
-		
-		
 
 		var displayCounty = function(e) {
+			
 			var results = {};
 			for(var i=0; i<e.results.length; i++) {
 				var name = getFromPartyIterator(
@@ -53,11 +58,7 @@ angular.module('myApp.controllers', [])
 			
 			clicked(this, e);
 		}
-
-		
-		
-		
-		
+	
 		var HighestVote = 0;
 		for(var i=0; i<wkrs.length; i++) {
 			for(var j=0; j<wkrs[i].results.length; j++) {
@@ -66,9 +67,6 @@ angular.module('myApp.controllers', [])
 				}
 			}
 		}
-
-
-		
 		var getFromPartyIterator = function(fSuccess, fOut) {
 			for(var p=0; p<parties.length; p++) {
 				if(fSuccess(parties[p])) {
@@ -77,7 +75,6 @@ angular.module('myApp.controllers', [])
 			}
 			return fOut(null);
 		}
-		
 		var getHighestResult = function(d) {
 			var indHighest = 0;
 			for(var r=1; r<d.results.length; r++) {
@@ -92,10 +89,25 @@ angular.module('myApp.controllers', [])
 		/* visualization */
 		var
 		width = 800, height = 600,
-		vis = d3.select("body").append("svg").attr("width", width).attr("height", height),
+		vis = d3.select("#mysvg").append("svg:svg").attr("width", width).attr("height", height),
 		projection = d3.geo.mercator().center([10.45, 51.16]).scale(2500).translate([width/2,height/2]);
 
 
+
+		var clicked = function(node, a) {
+			var elm = vis.select("#"+node.getAttribute("id"));
+			elm.transition();
+			var zoomFactor = 4;
+			var bbox = node.getBBox(), centroid = [bbox.x + bbox.width/2, bbox.y + bbox.height/2];
+			var x = centroid[0], y = centroid[1], x1 = (-x*zoomFactor + width/2), y1 = (-y*zoomFactor + height/2);
+			
+			g.attr("transform", "translate(" + x1 + "," + y1 + ") scale(" + zoomFactor + ")");
+		    features.attr("stroke-width", strokeWidth(zoomFactor) + "");
+		    
+			zoom.translate([x1, y1]);
+			zoom.scale(zoomFactor);
+		}
+		
 		var drawCoordinatePoints = function(d) {
 			return d.map(function(d) {
 				return projection(d).join(",");
@@ -138,20 +150,6 @@ angular.module('myApp.controllers', [])
 				.data(function(d) { return d.county.coordinates; }).enter().append("polygon")
 				.attr("points", drawCoordinatePoints);
 
-
-		function clicked(node, a) {
-			var elm = vis.select("#"+node.getAttribute("id"));
-			elm.transition();
-			var zoomFactor = 4;
-			var bbox = node.getBBox(), centroid = [bbox.x + bbox.width/2, bbox.y + bbox.height/2];
-			var x = centroid[0], y = centroid[1], x1 = (-x*zoomFactor + width/2), y1 = (-y*zoomFactor + height/2);
-			
-			g.attr("transform", "translate(" + x1 + "," + y1 + ") scale(" + zoomFactor + ")");
-		    features.attr("stroke-width", strokeWidth(zoomFactor) + "");
-		    
-			zoom.translate([x1, y1]);
-			zoom.scale(zoomFactor);
-		}
 	};
 	
 });
