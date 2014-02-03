@@ -16,23 +16,40 @@ angular.module('myApp.controllers', [])
 			return 0.5 + 2 / scale;
 		}
 		
+		
+		
+		var showCounty = function(
+				gid,			// 158
+				state,			// [3, "Berlin"]
+				district,		// [12, "Berlin"]
+				county,			// [141, "Berlin"]
+				province,		// "Berlin"
+				results,		// { "SPD" : [123Erststimme, 456Zweitstimme] }
+				constituencyIds	// [ 58, 63, 61, 62, 59, ... ]
+		) {
+			alert(gid+"\n"+state+"\n"+district+"\n"+county+"\n"+province+"\n"+results+"\n"+constituencyIds+"\n");
+		}
+		
+		
 
 		var displayCounty = function(e) {
-			var isOkValue = function(k, r) { return k!=null && (typeof k=="string" || typeof k=="number" || typeof k=="boolean" || (!r && Object.prototype.toString.call(k) === '[object Array]' && isOkValue(k[0], true))); }
-
-			var txt = "Properties:\n";
-			for(key in e.county) { if(isOkValue(e.county[key])) { txt += key + " = " + e.county[key] + "\n"; } }
-			
-			txt += "\nResults:\n"
+			var results = {};
 			for(var i=0; i<e.results.length; i++) {
 				var name = getFromPartyIterator(
 					function(party) { return party.partyId==e.results[i].partyId; },
 					function(party) { return party!=null ? party.partyName : "???" });
-				txt +=  name + ": " + Math.round(e.results[i].votes1) + " Erst-, " + Math.round(e.results[i].votes2) + " Zweitstimmen\n";
+				results[name] = [ Math.round(e.results[i].votes1), Math.round(e.results[i].votes2)];
 			}
 			
-			txt += "\nConstituency-Ids: "+e.constituencyIds;
-			alert(txt);
+			showCounty(
+					e.county.gid,
+					[e.county.stateId, e.county.stateName],
+					[e.county.districtId, e.county.districtName],
+					[e.county.countyId, e.county.countyName],
+					e.county.provinceName,
+					results,
+					e.constituencyIds
+			);
 			
 			clicked(this, e);
 		}
