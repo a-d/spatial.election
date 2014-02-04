@@ -1,9 +1,11 @@
 package edu.spatial.election.domain;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CollectionTable;
@@ -14,6 +16,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -68,17 +71,13 @@ public class Constituency extends ExportableGeometry implements Serializable {
 	private Set<ElectionResult> electionResults = new HashSet<ElectionResult>();
 
 	
+	@ElementCollection(targetClass = java.lang.Double.class, fetch=FetchType.EAGER)
+	@MapKeyJoinColumn(name = "key_id")
+	@CollectionTable(name = "CONSTITUENCY_DATA", joinColumns = @JoinColumn(name = "constituency_id"))
+	@Column(name = "value")
+	private Map<DataKey, Double> data = new HashMap<DataKey, Double>();
 
-	@JsonIgnore
-	@ElementCollection
-	@CollectionTable(
-			name="CONSTITUENCY_DATA",
-			joinColumns=@JoinColumn(name="GID")
-			)
-	private List<ConstituencyData> data;
 
-	
-	
 	public long getGid() {
 		return gid;
 	}
@@ -127,14 +126,6 @@ public class Constituency extends ExportableGeometry implements Serializable {
 		this.geom = geom;
 	}
 
-	public List<ConstituencyData> getData() {
-		return data;
-	}
-
-	public void setData(List<ConstituencyData> data) {
-		this.data = data;
-	}
-
 	public Point getCenterPoint() {
 		return centerPoint;
 	}
@@ -158,5 +149,13 @@ public class Constituency extends ExportableGeometry implements Serializable {
 
 	public void setElectionResults(Set<ElectionResult> electionResults) {
 		this.electionResults = electionResults;
+	}
+
+	public Map<DataKey, Double> getData() {
+		return data;
+	}
+
+	public void setData(Map<DataKey, Double> data) {
+		this.data = data;
 	}
 }

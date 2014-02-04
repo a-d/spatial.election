@@ -1,23 +1,68 @@
 package edu.spatial.election.domain;
 
-import javax.persistence.Embeddable;
+import java.io.Serializable;
 
-@Embeddable
-public class CountyData {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+@Entity
+@Table(name="COUNTY_DATA")
+public class CountyData implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@Column(name = "county_Id")
+	private int countyId;
 	
-	private String key;
-	private long value;
+	@Id
+	@Column(name = "key_Id")
+	private int keyId;
 	
-	public String getKey() {
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "county_id")
+	private County county;
+
+	@ManyToOne(fetch=FetchType.EAGER, optional=false)
+	@JoinColumn(name = "key_id")
+	private DataKey key;
+	
+	
+	
+	private Double value;
+
+	
+	
+	
+	public County getCounty() {
+		return county;
+	}
+
+	public void setCounty(County county) {
+		this.county = county;
+	}
+
+	public DataKey getKey() {
 		return key;
 	}
-	public void setKey(String key) {
+
+	public void setKey(DataKey key) {
 		this.key = key;
 	}
-	public long getValue() {
+
+	public Double getValue() {
 		return value;
 	}
-	public void setValue(long value) {
+
+	public void setValue(Double value) {
 		this.value = value;
 	}
+
 }

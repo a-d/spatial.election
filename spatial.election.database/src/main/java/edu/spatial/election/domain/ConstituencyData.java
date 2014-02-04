@@ -1,23 +1,62 @@
 package edu.spatial.election.domain;
 
-import javax.persistence.Embeddable;
+import java.io.Serializable;
 
-@Embeddable
-public class ConstituencyData {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+
+@Entity
+@Table(name="CONSTITUENCY_DATA")
+public class ConstituencyData implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@Column(name = "constituency_Id")
+	private long constituencyId;
 	
-	private String key;
-	private long value;
+	@Id
+	@Column(name = "key_Id")
+	private long keyId;
 	
-	public long getValue() {
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "constituency_id")
+	private Constituency constituency;
+
+	@ManyToOne(fetch=FetchType.EAGER, optional=false)
+	@JoinColumn(name = "key_id")
+	private DataKey key;
+	
+	
+	
+	private Double value;
+	
+	
+	
+	public Double getValue() {
 		return value;
 	}
-	public void setValue(long value) {
+	public void setValue(Double value) {
 		this.value = value;
 	}
-	public String getKey() {
+	public Constituency getConstituency() {
+		return constituency;
+	}
+	public void setConstituency(Constituency constituency) {
+		this.constituency = constituency;
+	}
+	public DataKey getKey() {
 		return key;
 	}
-	public void setKey(String key) {
+	public void setKey(DataKey key) {
 		this.key = key;
 	}
 }

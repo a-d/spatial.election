@@ -1,15 +1,20 @@
 package edu.spatial.election.domain;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
@@ -78,15 +83,14 @@ public class County extends ExportableGeometry implements Serializable {
 	@OrderBy("areaQuota")
 	private List<CountyContainsConstituency> dependingConstituencies = new LinkedList<CountyContainsConstituency>();
 	
-	@JsonIgnore
-	@ElementCollection
-	@CollectionTable(
-			name="COUTNY_DATA",
-			joinColumns=@JoinColumn(name="GID")
-			)
-	private List<CountyData> data;
+
 	
-	
+	@ElementCollection(targetClass = java.lang.Double.class, fetch=FetchType.EAGER)
+	@MapKeyJoinColumn(name = "key_id")
+	@CollectionTable(name = "COUNTY_DATA", joinColumns = @JoinColumn(name = "county_id"))
+	@Column(name = "value")
+	private Map<DataKey, Double> data = new HashMap<DataKey, Double>();
+
 	
 	public long getGid() {
 		return gid;
@@ -192,13 +196,6 @@ public class County extends ExportableGeometry implements Serializable {
 		this.geom = geom;
 	}
 
-	public List<CountyData> getData() {
-		return data;
-	}
-
-	public void setData(List<CountyData> data) {
-		this.data = data;
-	}
 
 	public String getDistrictName() {
 		return districtName;
@@ -214,5 +211,13 @@ public class County extends ExportableGeometry implements Serializable {
 
 	public void setDependingConstituencies(List<CountyContainsConstituency> dependingConstituencies) {
 		this.dependingConstituencies = dependingConstituencies;
+	}
+
+	public Map<DataKey, Double> getData() {
+		return data;
+	}
+
+	public void setData(Map<DataKey, Double> data) {
+		this.data = data;
 	}
 }
