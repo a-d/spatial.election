@@ -2,6 +2,7 @@ package edu.spatial.election.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -11,17 +12,20 @@ import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-@SuppressWarnings("serial")
 @Entity
 @Table(name = "ELECTIONRESULT")
-//@IdClass(ElectionResultKey.class) // TODO could not be initiated
 public class ElectionResult implements Serializable {
-	
+	private static final long serialVersionUID = 1;
+
 	@Id
 	private long partyId;
-	
+
 	@Id
 	private long constituencyId;
+
+	@Id
+	@Column(name="election_electionid", nullable=true)
+	private Long electionId = 0l;
 	
 	private long primaryVotes;
 	
@@ -30,6 +34,7 @@ public class ElectionResult implements Serializable {
 	
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "election_electionid")
 	private Election election;
 	
 
@@ -104,5 +109,15 @@ public class ElectionResult implements Serializable {
 
 	public void setElection(Election election) {
 		this.election = election;
+	}
+
+
+	public Long getElectionId() {
+		return electionId;
+	}
+
+
+	public void setElectionId(Long electionId) {
+		this.electionId = electionId;
 	}
 }

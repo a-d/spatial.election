@@ -1,12 +1,15 @@
 var VOTE = "votes1";
+var ELECTION_PARTIES = [];
 
 angular.module('myApp.controllers', [])
 .controller('mapCtrl', function mapCtrl($scope, d3, Counties, Parties) {
-
+	
 	Parties.get().$promise.then(function(parties) {
-		Counties.get({'level' : 2}).$promise.then(function(counties) {
-			displayWahlkreise(counties, parties);
-		});
+		ELECTION_PARTIES = parties;
+	});
+	
+	Counties.get({'level' : 2}).$promise.then(function(counties) {
+		displayWahlkreise(counties);
 	});
 
 	var showCounty = function(
@@ -15,8 +18,8 @@ angular.module('myApp.controllers', [])
 			district,		// [12, "Berlin"]
 			county,			// [141, "Berlin"]
 			province,		// "Berlin"
-			results,		// { "SPD" : [123Erststimme, 456Zweitstimme] }
-			constituencyIds	// [ 58, 63, 61, 62, 59, ... ]
+			results,		// { "SPD" : [2014, 123Erststimme, 456Zweitstimme] }
+			constituencyIds	// { 58 : 12.0, 63 : 10.3, 61 : 18.0, 62 : 0.3, 59 : 0.1, ... }
 	) {
 		$scope.gid = gid;
 		$scope.state = state;
@@ -30,7 +33,7 @@ angular.module('myApp.controllers', [])
 	}
 	
 	
-	var displayWahlkreise = function (wkrs, parties) {
+	var displayWahlkreise = function (wkrs) {
 		
 		var strokeWidth = function(scale) {
 			return 0.5 + 2 / scale;
@@ -43,7 +46,7 @@ angular.module('myApp.controllers', [])
 				var name = getFromPartyIterator(
 					function(party) { return party.partyId==e.results[i].partyId; },
 					function(party) { return party!=null ? party.partyName : "???" });
-				results[name] = [ Math.round(e.results[i].votes1), Math.round(e.results[i].votes2)];
+				results[name] = [ e.results[i].electionId, Math.round(e.results[i].votes1), Math.round(e.results[i].votes2)];
 			}
 			
 			showCounty(
@@ -53,12 +56,12 @@ angular.module('myApp.controllers', [])
 					[e.county.countyId, e.county.countyName],
 					e.county.provinceName,
 					results,
-					e.constituencyIds
+					e.constituencies
 			);
 			
 			clicked(this, e);
 		}
-	
+
 		var HighestVote = 0;
 		for(var i=0; i<wkrs.length; i++) {
 			for(var j=0; j<wkrs[i].results.length; j++) {
@@ -68,9 +71,9 @@ angular.module('myApp.controllers', [])
 			}
 		}
 		var getFromPartyIterator = function(fSuccess, fOut) {
-			for(var p=0; p<parties.length; p++) {
-				if(fSuccess(parties[p])) {
-					return fOut(parties[p]);
+			for(var p=0; p<ELECTION_PARTIES.length; p++) {
+				if(fSuccess(ELECTION_PARTIES[p])) {
+					return fOut(ELECTION_PARTIES[p]);
 				}
 			}
 			return fOut(null);
@@ -93,7 +96,6 @@ angular.module('myApp.controllers', [])
 		projection = d3.geo.mercator().center([10.45, 51.16]).scale(2500).translate([width/2,height/2]);
 
 
-
 		var clicked = function(node, a) {
 			var elm = vis.select("#"+node.getAttribute("id"));
 			elm.transition();
@@ -114,19 +116,24 @@ angular.module('myApp.controllers', [])
 			}).join(" ");
 		}
 		
+		var zooming = false;
 		var zoom = d3.behavior
 			.zoom()
 			.scaleExtent([1, 8])
 			.on("zoom", function() {
-				var scale = d3.event.scale;
-				var trans = scale == 1 ? "0.0, 0.0" : d3.event.translate;
-				g.attr("transform", "translate(" + trans + ") scale(" + scale + ")");
-			    features.attr("stroke-width", strokeWidth(scale) + "");
+				if(!zooming) {
+					zooming = true;
+					var scale = d3.event.scale;
+					var trans = scale == 1 ? "0.0, 0.0" : d3.event.translate;
+					g.attr("transform", "translate(" + trans + ") scale(" + scale + ")");
+				    features.attr("stroke-width", strokeWidth(scale) + "");
+				    zooming = false;
+				}
 			});
 		
 		var g = vis.append("g").call(zoom);
 		g.append("rect").attr("class", "overlay").attr("width", width).attr("height", height);
-		
+
 		var features = g.selectAll("g")
 			.data(wkrs).enter().append("g")
 			.attr("id", function(d) { return "county-"+d.county.gid; })
@@ -147,7 +154,8 @@ angular.module('myApp.controllers', [])
 			.on("click", displayCounty)
 	
 			.selectAll("polygon")
-				.data(function(d) { return d.county.coordinates; }).enter().append("polygon")
+				.data(function(d) { 
+					return d.county.coordinates; }).enter().append("polygon")
 				.attr("points", drawCoordinatePoints);
 
 	};

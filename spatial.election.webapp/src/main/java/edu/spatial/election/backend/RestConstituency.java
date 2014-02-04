@@ -25,14 +25,6 @@ public class RestConstituency {
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<Constituency> getAllConstituencies() {
-		return getAllConstituenciesByDetail(0);
-	}
-	
-	@GET
-	@Path("/detail/{level}")
-	@Produces({MediaType.APPLICATION_JSON})
-	public List<Constituency> getAllConstituenciesByDetail(@PathParam("level") double level) {
-
 		Session s = DatabaseConnection.openSession();
 
 		// Create a DAO
@@ -40,21 +32,33 @@ public class RestConstituency {
 		constituencyDAO.setConnection(s);
 
 		List<Constituency> cs = constituencyDAO.getConstituencies();
-		for(Constituency c : cs)
-		{
-			c.setGeometryDetail(level);
-			c.getGeometryArray();
-		}
-		
 		s.close();
 		return cs;
+	}
+	
+	@GET
+	@Path("{id}/geometry")
+	@Produces({MediaType.APPLICATION_JSON})
+	public double[][][] getConstituencyGeometryById(@PathParam("id") long id) throws ConstituencyNotFoundException {
+		Session s = DatabaseConnection.openSession();
+
+		// Create a DAO
+		ConstituencyDAO constituencyDAO = f.getConstituencyDAO();
+		constituencyDAO.setConnection(s);
+
+		Constituency c = constituencyDAO.findConstituencyById(id);
+		c.setGeometryDetail(0);
+		c.getGeometryArray();
+		double[][][] result = c.getGeometryArray();
+		
+		s.close();
+		return result;
 	}
 
 	@GET
 	@Path("{id}")
 	@Produces({MediaType.APPLICATION_JSON})
 	public Constituency getConstituencyById(@PathParam("id") long id) throws ConstituencyNotFoundException {
-		
 		Session s = DatabaseConnection.openSession();
 
 		// Create a DAO

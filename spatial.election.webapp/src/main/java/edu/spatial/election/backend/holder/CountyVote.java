@@ -5,6 +5,7 @@ import edu.spatial.election.domain.ElectionResult;
 public class CountyVote {
 
 	private long partyId;
+	private long electionId;
 	private double votes1;
 	private double votes2;
 	
@@ -13,11 +14,12 @@ public class CountyVote {
 		this.partyId = result.getPartyId();
 		this.votes1 = influence * result.getPrimaryVotes();
 		this.votes2 = influence * result.getSecondaryVotes();
+		this.electionId = result.getElectionId();
 	}
 	
 	public void add(ElectionResult result, Double influence)
 	{
-		if(this.partyId == result.getPartyId()) {
+		if(this.partyId == result.getPartyId() && this.electionId == result.getElectionId()) {
 			this.votes1 += influence * result.getPrimaryVotes();
 			this.votes2 += influence * result.getSecondaryVotes();
 		}
@@ -41,6 +43,14 @@ public class CountyVote {
 	}
 	public void setVotes2(double votes2) {
 		this.votes2 = votes2;
+	}
+
+	public long getElectionId() {
+		return electionId;
+	}
+
+	public void setElectionId(long electionId) {
+		this.electionId = electionId;
 	}
 	
 }

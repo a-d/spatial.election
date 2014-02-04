@@ -27,7 +27,10 @@ public class Election {
 	private Set<ElectionResult> results = new HashSet<ElectionResult>();
 
 
-	
+	@Override
+	public String toString() {
+		return String.valueOf(year);
+	}
 	
 	
 	public long getElectionId() {

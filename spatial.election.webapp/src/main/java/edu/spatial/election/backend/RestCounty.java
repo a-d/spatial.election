@@ -1,7 +1,10 @@
 package edu.spatial.election.backend;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -19,9 +22,13 @@ import edu.spatial.election.domain.County;
 
 @Path("/county")
 public class RestCounty {
+	private static final long CACHED_SECONDS = 3600*24*7;
+
 	private SpatialDAOFactory f = SpatialDAOFactory.getDAOFactory(SpatialDAOFactory.POSTGIS);
 
+	private static ConcurrentHashMap<Double, CountiesByDetail> cachedAllCountiesByDetail = new ConcurrentHashMap<Double, CountiesByDetail>();
 
+	
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<County> getAllCounties() {
@@ -32,46 +39,48 @@ public class RestCounty {
 	@Path("/detail/{level}")
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<County> getAllCountiesByDetail(@PathParam("level") double level) {
-
-		Session s = DatabaseConnection.openSession();
-
-		// Create a DAO
-		CountyDAO countyDAO = f.getCountyDAO();
-		countyDAO.setConnection(s);
-
-		List<County> cs = countyDAO.getCounties();
-		for(County c : cs)
-		{
-			c.setGeometryDetail(level);
-			c.getGeometryArray();
-		}
-		
-		s.close();
-		return cs;
+		return getCountyDetailsByLevel(level).counties;
 	}
 	
+	
+	private CountiesByDetail getCountyDetailsByLevel(double level) {
+		CountiesByDetail cached = cachedAllCountiesByDetail.get(level);
+		if(cached==null) {
+			cachedAllCountiesByDetail.put(level, cached = new CountiesByDetail());
+		}
+		if(cached.counties==null || cached.counties.isEmpty() || cached.time==null || (new Date().getTime()-cached.time.getTime())/1000 > CACHED_SECONDS) {
+			if(cached.session==null) {
+				cached.session = DatabaseConnection.openSession();
+			}
+
+			// Create a DAO
+			CountyDAO countyDAO = f.getCountyDAO();
+			countyDAO.setConnection(cached.session);
+			
+			cached.counties = countyDAO.getCounties();
+			cached.time = new Date();
+			
+			for(County c : cached.counties) {
+				c.setGeometryDetail(level);
+				c.getGeometryArray();
+			}
+		}
+		return cached;
+	}
+
 	@GET
 	@Path("/votes/{level}")
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<CountyVotes> getAllCountiesWithResultsByDetail(@PathParam("level") double level) {
 
-		Session s = DatabaseConnection.openSession();
-
-		// Create a DAO
-		CountyDAO countyDAO = f.getCountyDAO();
-		countyDAO.setConnection(s);
-
+		CountiesByDetail counties = getCountyDetailsByLevel(level);
 		List<CountyVotes> out = new LinkedList<CountyVotes>();
-		for(County c : countyDAO.getCounties())
+
+		for(County c : counties.counties)
 		{
-			c.setGeometryDetail(level);
-			c.getGeometryArray();
-			
-			CountyVotes result = new CountyVotes(c);
-			out.add(result);
+			CountyVotes v = new CountyVotes(c);
+			out.add(v);
 		}
-		
-		s.close();
 		return out;
 	}
 
@@ -79,7 +88,7 @@ public class RestCounty {
 	@Path("{id}")
 	@Produces({MediaType.APPLICATION_JSON})
 	public County getCountyById(@PathParam("id") long id) throws CountyNotFoundException {
-			Session s = DatabaseConnection.openSession();
+		Session s = DatabaseConnection.openSession();
 		// Create a DAO
 		CountyDAO countyDAO = f.getCountyDAO();
 		countyDAO.setConnection(s);
@@ -89,4 +98,53 @@ public class RestCounty {
 		s.close();
 		return c;
 	}
+	
+	
+
+	
+	
+	
+
+	private class CountiesByDetail {
+		public Session session;
+		public List<County> counties = new LinkedList<County>();
+		public Date time = new Date();
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getOuterType().hashCode();
+			result = prime * result
+					+ ((counties == null) ? 0 : counties.hashCode());
+			result = prime * result + ((time == null) ? 0 : time.hashCode());
+			return result;
+		}
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			CountiesByDetail other = (CountiesByDetail) obj;
+			if (!getOuterType().equals(other.getOuterType()))
+				return false;
+			if (counties == null) {
+				if (other.counties != null)
+					return false;
+			} else if (!counties.equals(other.counties))
+				return false;
+			if (time == null) {
+				if (other.time != null)
+					return false;
+			} else if (!time.equals(other.time))
+				return false;
+			return true;
+		}
+		private RestCounty getOuterType() {
+			return RestCounty.this;
+		}
+	}
+	
 }

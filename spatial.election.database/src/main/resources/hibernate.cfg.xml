@@ -16,7 +16,7 @@
 		<property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/spatialdb_project</property>
 
 
-		<property name="connection_pool_size">1</property>
+		<property name="connection_pool_size">5</property>
 		<property name="hbm2ddl.auto">update</property>
 		<property name="show_sql">false</property>
 
@@ -30,5 +30,8 @@
 		<mapping class="edu.spatial.election.domain.ElectionResult" />
 		<mapping class="edu.spatial.election.domain.keys.ElectionResultKey" />
 		<mapping class="edu.spatial.election.domain.Election" />
+		<mapping class="edu.spatial.election.domain.CountyData" />
+		<mapping class="edu.spatial.election.domain.ConstituencyData" />
+		<mapping class="edu.spatial.election.domain.DataKey" />
 	</session-factory>
 </hibernate-configuration>

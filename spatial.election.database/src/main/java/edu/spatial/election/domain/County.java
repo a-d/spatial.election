@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.annotations.Type;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
@@ -78,7 +79,7 @@ public class County extends ExportableGeometry implements Serializable {
 	private MultiPolygon geom;
 
 	@JsonIgnore
-	@OneToMany
+	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="county_id", referencedColumnName="id_3")
 	@OrderBy("areaQuota")
 	private List<CountyContainsConstituency> dependingConstituencies = new LinkedList<CountyContainsConstituency>();
@@ -91,6 +92,12 @@ public class County extends ExportableGeometry implements Serializable {
 	@Column(name = "value")
 	private Map<DataKey, Double> data = new HashMap<DataKey, Double>();
 
+	
+
+	@JsonProperty(value="coordinates")
+	public double[][][] getGeometryCoordinates() {
+		return super.getGeometryArray();
+	}
 	
 	public long getGid() {
 		return gid;

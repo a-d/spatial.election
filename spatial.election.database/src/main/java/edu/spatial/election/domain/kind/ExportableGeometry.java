@@ -3,7 +3,6 @@ package edu.spatial.election.domain.kind;
 import javax.persistence.Transient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
@@ -13,16 +12,22 @@ public abstract class ExportableGeometry implements Geometry {
 	@Transient
 	private double detail = 0; // #points' = #points/2^detail
 
+	@JsonIgnore
+	@Transient
+	private double[][][] geometryArray = null;
+	
 
 	@JsonIgnore
-	@JsonProperty(value="geometry")
 	public String getGeometryString() {
 		return getGeom().toText();
 	}
 	
 
-	@JsonProperty(value="coordinates")
+	@JsonIgnore
 	public double[][][] getGeometryArray() {
+		if(geometryArray!=null) {
+			return geometryArray;
+		}
 		int MIN_SIZE = 3;
 		int polys = getGeom().getNumGeometries();
 		double[][][] out = new double[polys][][];
@@ -57,6 +62,9 @@ public abstract class ExportableGeometry implements Geometry {
 	
 
 	public void setGeometryDetail(double detail) {
+		if(this.detail!=detail) {
+			geometryArray = null;
+		}
 		this.detail = detail;
 	}
 	

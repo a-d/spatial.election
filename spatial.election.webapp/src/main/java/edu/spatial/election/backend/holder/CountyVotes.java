@@ -3,6 +3,8 @@ package edu.spatial.election.backend.holder;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+
 import edu.spatial.election.domain.County;
 import edu.spatial.election.domain.CountyContainsConstituency;
 import edu.spatial.election.domain.ElectionResult;
@@ -12,7 +14,7 @@ public class CountyVotes {
 
 	private County county;
 	private Collection<CountyVote> results = new LinkedList<CountyVote>();
-	private LinkedList<Integer> constituencyIds = new LinkedList<Integer>();
+	private Map<Integer, Double> constituencies = new HashMap<Integer, Double>();
 
 	
 
@@ -29,7 +31,7 @@ public class CountyVotes {
 		HashMap<Party, CountyVote> countyResults = new HashMap<Party, CountyVote>();
 		for(CountyContainsConstituency ccc : county.getDependingConstituencies()) {
 			
-			constituencyIds.add(ccc.getConstituencyId());
+			constituencies.put(ccc.getConstituencyId(), ccc.getAreaQuota());
 			Collection<ElectionResult> res = ccc.getConstituency().getElectionResults();
 			Double influence = ccc.getAreaQuota();
 			
@@ -52,8 +54,8 @@ public class CountyVotes {
 		this.results = countyResults.values();
 	}
 	
-	public LinkedList<Integer> getConstituencyIds() {
-		return constituencyIds;
+	public Map<Integer, Double> getConstituencies() {
+		return constituencies;
 	}
 	
 	public County getCounty() {
