@@ -139,6 +139,7 @@
 			\textbf{Technologien}
 			\begin{itemize}
 				\item \href{http://www.java.com/en/}{Java} \includegraphics[scale=0.08]{javalogo.png}
+				\item \href{https://jersey.java.net/}{Jersey} \includegraphics[scale=0.5]{jerseylogo.png} 
 				\item \href{http://www.postgresql.org/}{PostgreSQL} \includegraphics[scale=0.08]{postgresqllogo.png}
 				\item \href{http://postgis.net/}{PostGIS} \includegraphics[scale=0.08]{postgislogo.png}
 			\end{itemize}
@@ -210,7 +211,19 @@
 \end{frame}
 
 \begin{frame}{Architektur}
+	\begin{figure}[hbtp]
+		\centering
+		\includegraphics[scale=0.35]{ArchitekturSpatialDB.png}
+		\caption{Architektur der Anwendung}
+	\end{figure}
+\end{frame}
 
+\begin{frame}{Designentscheidungen}
+	\begin{figure}[hbtp]
+		\centering
+		\includegraphics[scale=0.5]{ccissue.png}
+		\caption{Wahl- und Landkreisüberlappung}
+	\end{figure}
 \end{frame}
 
 \begin{frame}[fragile]{Beispielcode}
@@ -226,10 +239,6 @@
 
 		=> coordinateCartesian = [377.85, 153.95]
   \end{lstlisting}
-\end{frame}
-
-\begin{frame}{Designentscheidungen}
-	
 \end{frame}
 
 \section{Demo}
