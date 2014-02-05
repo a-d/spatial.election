@@ -40,7 +40,7 @@ angular.module('myApp.controllers', [])
 		}
 
 		var displayCounty = function(e) {
-			
+			if(!doclick) return;
 			var results = {};
 			for(var i=0; i<e.results.length; i++) {
 				var name = getFromPartyIterator(
@@ -91,9 +91,15 @@ angular.module('myApp.controllers', [])
 
 		/* visualization */
 		var
-		width = 800, height = 600,
+		width1 = 800, height1 = 600;
+		
+		var
+		width = d3.select("#mysvg").node().offsetWidth,
+		height = width * height1/width1;
+		
+		var
 		vis = d3.select("#mysvg").append("svg:svg").attr("width", width).attr("height", height),
-		projection = d3.geo.mercator().center([10.45, 51.16]).scale(2500).translate([width/2,height/2]);
+		projection = d3.geo.mercator().center([10.45, 51.30]).scale(2500).translate([width/2,height/2]);
 
 
 		var clicked = function(node, a) {
@@ -122,6 +128,7 @@ angular.module('myApp.controllers', [])
 			.scaleExtent([1, 8])
 			.on("zoom", function() {
 				if(!zooming) {
+					doclick = false;
 					zooming = true;
 					var scale = d3.event.scale;
 					var trans = scale == 1 ? "0.0, 0.0" : d3.event.translate;
@@ -130,10 +137,18 @@ angular.module('myApp.controllers', [])
 				    zooming = false;
 				}
 			});
-		
+
 		var g = vis.append("g").call(zoom);
 		g.append("rect").attr("class", "overlay").attr("width", width).attr("height", height);
+		g = g.append("g");
+		
+		/*
+		var g = vis.append("g").call(zoom);
+		g.append("rect").attr("class", "overlay").attr("width", width).attr("height", height);
+*/
 
+
+		var doclick = false;
 		var features = g.selectAll("g")
 			.data(wkrs).enter().append("g")
 			.attr("id", function(d) { return "county-"+d.county.gid; })
@@ -152,6 +167,7 @@ angular.module('myApp.controllers', [])
 			.attr("stroke-width", strokeWidth(1))
 			.attr("class", "county-border")
 			.on("click", displayCounty)
+			.on("mousedown", function() { doclick = true; })
 	
 			.selectAll("polygon")
 				.data(function(d) { 

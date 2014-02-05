@@ -3,23 +3,50 @@
 <head>
 <meta charset="utf-8">
 <title>General Election Germany 2013</title>
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
 </head>
 <body ng-controller="mapCtrl">
 
-<div id="status">
-	<div>GID : {{gid}}</div>
-	<div>State : {{state}}</div>
-	<div>District : {{district}}</div>
-	<div>County : {{county}}</div>
-	<div>Province : {{province}}</div>
-	<div>Results : {{results}}</div>
-	<div>Constituencies : {{constituencyIds}}</div>
+<div class="container">
+
+	<div class="page-header">
+	  <h1>&Uuml;berschrift</h1>
+	  <p class="lead">Ein bisschen Text.</p>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-4">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Landkreis</h3>
+				</div>
+				<div class="panel-body">
+					<ul class="list-group">
+						<li class="list-group-item">GID: {{gid}}</li>
+						<li class="list-group-item">State: {{state}}</li>
+						<li class="list-group-item">District : {{district}}</li>
+						<li class="list-group-item">County : {{county}}</li>
+						<li class="list-group-item">Province : {{province}}</li>
+						<li class="list-group-item">Results : {{results}}</li>
+						<li class="list-group-item">Constituencies : {{constituencyIds}}</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-md-8">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<h3 class="panel-title">Deutschland</h3>
+				</div>
+				<div class="panel-body" style="padding:0px">
+					<div id="mysvg"></div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-
-<div id="mysvg"></div>
-
 
 <script src="lib/angular/angular.js"></script>
 <script src="lib/angular/angular-resource.js"></script>
