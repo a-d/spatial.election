@@ -17,6 +17,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 public class ElectionResult implements Serializable {
 	private static final long serialVersionUID = 1;
 
+	/*
 	@Id
 	private long partyId;
 
@@ -24,26 +25,28 @@ public class ElectionResult implements Serializable {
 	private long constituencyId;
 
 	@Id
-	@Column(name="election_electionid", nullable=true)
-	private Long electionId = 0l;
+	@Column(name="election_electionid")
+	private Long electionId;
+	*/
 	
 	private long primaryVotes;
 	
 	private long secondaryVotes;
 	
-	
+
+	@Id
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "election_electionid")
 	private Election election;
-	
 
-
+	@Id
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "constituencyId")
 	private Constituency constituency;
 
+	@Id
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "partyId")
@@ -51,7 +54,7 @@ public class ElectionResult implements Serializable {
 	
 
 
-	
+	/*
 	public long getPartyId() {
 		return partyId;
 	}
@@ -69,6 +72,15 @@ public class ElectionResult implements Serializable {
 		this.constituencyId = constituencyId;
 	}
 
+	public Long getElectionId() {
+		return electionId;
+	}
+
+
+	public void setElectionId(Long electionId) {
+		this.electionId = electionId;
+	}
+*/
 	public long getPrimaryVotes() {
 		return primaryVotes;
 	}
@@ -111,13 +123,4 @@ public class ElectionResult implements Serializable {
 		this.election = election;
 	}
 
-
-	public Long getElectionId() {
-		return electionId;
-	}
-
-
-	public void setElectionId(Long electionId) {
-		this.electionId = electionId;
-	}
 }

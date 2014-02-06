@@ -47,7 +47,12 @@ public class DatabaseConnection {
 	
 	private static SessionFactory getSessionFactory() {
 		if(sessionFactory==null) {
-			configureSessionFactory();
+			synchronized(openedSessions)
+			{
+				if(sessionFactory==null) {
+					configureSessionFactory();
+				}
+			}
 		}
 		return sessionFactory;
 	}

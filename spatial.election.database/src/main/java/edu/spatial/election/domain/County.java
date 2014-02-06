@@ -12,6 +12,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyJoinColumn;
@@ -31,7 +32,7 @@ import edu.spatial.election.domain.kind.ExportableGeometry;
 public class County extends ExportableGeometry implements Serializable {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private long gid;
 
 	@Column(name="id_0")
@@ -64,7 +65,9 @@ public class County extends ExportableGeometry implements Serializable {
 
 	// NOT used:
 	// private String nl_name_3;
-	// private String varname_3;
+	@Column(name="varname_3")
+	private String countyNameVars;
+	
 	// private String eng_type_3;
 
 	@Column(name="type_3")
@@ -86,7 +89,8 @@ public class County extends ExportableGeometry implements Serializable {
 	
 
 	
-	@ElementCollection(targetClass = java.lang.Double.class, fetch=FetchType.EAGER)
+	@JsonIgnore
+	@ElementCollection(targetClass = java.lang.Double.class, fetch=FetchType.LAZY)
 	@MapKeyJoinColumn(name = "key_id")
 	@CollectionTable(name = "COUNTY_DATA", joinColumns = @JoinColumn(name = "county_id"))
 	@Column(name = "value")
@@ -226,5 +230,13 @@ public class County extends ExportableGeometry implements Serializable {
 
 	public void setData(Map<DataKey, Double> data) {
 		this.data = data;
+	}
+
+	public String getCountyNameVars() {
+		return countyNameVars;
+	}
+
+	public void setCountyNameVars(String countyNameVars) {
+		this.countyNameVars = countyNameVars;
 	}
 }
