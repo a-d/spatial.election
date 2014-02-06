@@ -10,25 +10,9 @@
 
 <div class="container">
 
-       <div ng-init="friends = [{name:'John', phone:123, color:'#ff0'},
-                                {name:'Mary', phone:32545, color:'#0f0'},
-                                {name:'Mike', phone:234, color:'#0ff'},
-                                {name:'Adam', phone:1, color:'#00f'},
-                                {name:'Julie', phone:0, color:'#555'},
-                                {name:'Juliette', phone:1000, color:'#ddd'}]"></div>
-                                <input type="button" value="set" ng-click="friends= []">
-       Search: <input ng-model="searchText">
-       <table id="searchTextResults">
-         <tr><th>Name</th><th>Phone</th></tr>
-         <tr ng-repeat="friend in friends | filter:searchText">
-           <td>{{friend.name}}</td>
-           <td style="background-color:{{friend.color}}">{{friend.phone}}</td>
-         </tr>
-       </table>
-       
 	<div class="page-header">
 	  <h1>Die Landkreise Deutschlands haben gewählt!</h1>
-	  <p class="lead">Diese interaktive Karte ermöglicht Ihnen die Auswertung der Bundestagswahlergebnisse in Hinblick auf verschiedene Strukturdaten einzelner Landkreise.</p>
+	  <p class="lead">Diese interaktive Karte ermöglicht Ihnen die Auswertung der Bundestagswahlergebnisse in Hinblick auf verschiedene Strukturdaten einzelner Landkreise. Klicken Sie einfach auf einen Landkreis Ihrer Wahl.</p>
 	</div>
 	
 	<div class="row">
@@ -52,10 +36,30 @@
 				</div>
 				<div class="panel-body">
 					<ul class="list-group">
-						<li class="list-group-item" ng-repeat="(key, value) in results">{{key}} : {{value[1]}} Erst- und {{value[2]}} Zweitstimmen
-							<span style="width:20px; height:20px; background-coor:; color:; display:block"></span>
+						<li class="list-group-item" ng-repeat="res in results">
+							
+							<span style="width:20px; height:20px; background-color:{{res.color}}; color:{{res.color}}; display:inline">.</span> {{res.name}}<br />
+							<span style="font-size:0.6em">{{res.votes1}}</span> (<b>{{res.votes1rel}}%</b>) <span style="font-size:0.6em">Erst-</span> <span style="font-size:0.6em">und {{res.votes2}}</span> (<b>{{res.votes2rel}}%</b>)  <span style="font-size:0.6em">Zweitstimmen</span>
 						</li>
 					</ul>
+				</div>
+			</div>
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Strukturdaten</h3>
+				</div>
+				<div class="panel-body">
+
+
+			       Search: <input ng-model="searchText">
+			       
+			       <table id="searchTextResults" border="1" style="width:90%">
+			         <tr ng-repeat="(key, val) in countyData | filter:searchText">
+			           <td>{{key}}</td>
+			           <td>{{val}}</td>
+			         </tr>
+       				</table>
+
 				</div>
 			</div>
 			<div class="panel panel-primary">
@@ -64,7 +68,8 @@
 				</div>
 				<div class="panel-body">
 					<ul class="list-group">
-						<li class="list-group-item" ng-repeat="(key, value) in constituencyIds">{{key}} : {{value*100}}%</li>
+						<li class="list-group-item" ng-repeat="c in constituencyIds">
+						{{c.const.wkr_name}} : {{c.value}}</li>
 					</ul>
 				</div>
 			</div>

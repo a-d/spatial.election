@@ -2,11 +2,13 @@ var VOTE = "votes1";
 var ELECTION_PARTIES = [];
 
 angular.module('myApp.controllers', [])
-.controller('mapCtrl', function mapCtrl($scope, d3, Counties, Parties) {
+.controller('mapCtrl', function mapCtrl($scope, d3, Counties, Parties, CountyData, Constituency) {
 	
+
 	Parties.get().$promise.then(function(parties) {
 		ELECTION_PARTIES = parties;
 	});
+	
 	
 	Counties.get({'level' : 2}).$promise.then(function(counties) {
 		displayWahlkreise(counties);
@@ -28,8 +30,9 @@ angular.module('myApp.controllers', [])
 		$scope.province = province;
 		$scope.results = results;
 		$scope.constituencyIds = constituencyIds;
-		
 		$scope.$apply();
+
+		$scope.countyData = CountyData.get({ 'id' : gid });
 	}
 	
 	
@@ -41,13 +44,50 @@ angular.module('myApp.controllers', [])
 
 		var displayCounty = function(e) {
 			if(!doclick) return;
-			var results = {};
+			var results = [];
+			var constituencies = [];
+
+			var maxVotes1 = 1, maxVotes2 = 1; 
+			for(var i=0; i<e.results.length; i++) {
+				if(e.results[i].votes1>maxVotes1) {
+					maxVotes1 = e.results[i].votes1;
+				}
+				if(e.results[i].votes2>maxVotes2) {
+					maxVotes1 = e.results[i].votes2;
+				}
+			}
+			
 			for(var i=0; i<e.results.length; i++) {
 				var name = getFromPartyIterator(
-					function(party) { return party.partyId==e.results[i].partyId; },
-					function(party) { return party!=null ? party.partyName : "???" });
-				results[name] = [ e.results[i].electionId, Math.round(e.results[i].votes1), Math.round(e.results[i].votes2)];
+						function(party) { return party.partyId==e.results[i].partyId; },
+						function(party) { return party!=null ? party.partyName : "???" });
+				var color = getFromPartyIterator(
+						function(party) { return party.partyId==e.results[i].partyId; },
+						function(party) { return party!=null ? party.color : "#999999" });
+				results[results.length] = {
+						"name" : name,
+						"color" : color,
+						"electionId" : e.results[i].electionId,
+						"votes1" : Math.round(e.results[i].votes1),
+						"votes1rel" : Math.round(10000*e.results[i].votes1/maxVotes1)/100 || "",
+						"votes2" : Math.round(e.results[i].votes2),
+						"votes2rel" : Math.round(10000*e.results[i].votes2/maxVotes2)/100 || ""
+				};
 			}
+
+		    results.sort(function(a, b){
+		        a = a.votes1 || 0;
+		        b = b.votes2 || 0;
+		        return b - a;
+		    });
+			
+			for(var key in e.constituencies) {
+				constituencies[constituencies.length] = {
+					"const" : Constituency.get({'id' : key}),
+					"value" : e.constituencies[key]
+				}
+			}
+			
 			
 			showCounty(
 					e.county.gid,
@@ -56,7 +96,7 @@ angular.module('myApp.controllers', [])
 					[e.county.countyId, e.county.countyName],
 					e.county.provinceName,
 					results,
-					e.constituencies
+					constituencies
 			);
 			
 			clicked(this, e);

@@ -24,6 +24,12 @@ angular.module('myApp.services', ['ngResource']) //
         }
     });
 }])
+.factory('CountyData', [ '$resource', function($resource) {
+	var baseurl = 'backend/county/';
+	return $resource(baseurl + ':id/data', {
+		id : '@id'
+	});
+}])
 .factory('Parties', [ '$resource', function($resource) {
 	var baseurl = 'backend/party/';
 	return $resource(baseurl, { },
