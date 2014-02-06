@@ -19,17 +19,36 @@
 		<div class="col-md-4">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
-					<h3 class="panel-title">Landkreis</h3>
+					<h3 class="panel-title">Landkreis <b>{{county[1]}}</b><span style="font-size:0.6em">{{county[0]}}</span></h3>
 				</div>
 				<div class="panel-body">
 					<ul class="list-group">
-						<li class="list-group-item">GID: {{gid}}</li>
-						<li class="list-group-item">State: {{state}}</li>
-						<li class="list-group-item">District : {{district}}</li>
-						<li class="list-group-item">County : {{county}}</li>
-						<li class="list-group-item">Province : {{province}}</li>
-						<li class="list-group-item">Results : {{results}}</li>
-						<li class="list-group-item">Constituencies : {{constituencyIds}}</li>
+						<li class="list-group-item">Geographische ID: {{gid}}</li>
+						<li class="list-group-item">Bundesland: {{state[1]}}<span style="font-size:0.6em">{{state[0]}}</span></li>
+						<li class="list-group-item">Ortsteil : {{district[1]}}<span style="font-size:0.6em">{{district[0]}}</span></li>
+						<li class="list-group-item">Gebiet : {{province}}</li>
+					</ul>
+				</div>
+			</div>
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Ergebnisse</h3>
+				</div>
+				<div class="panel-body">
+					<ul class="list-group">
+						<li class="list-group-item" ng-repeat="(key, value) in results">{{key}} : {{value[1]}} Erst- und {{value[2]}} Zweitstimmen
+							<span style="width:20px; height:20px; background-coor:; color:; display:block"></span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Abhängige Wahlkreise</h3>
+				</div>
+				<div class="panel-body">
+					<ul class="list-group">
+						<li class="list-group-item" ng-repeat="(key, value) in constituencyIds">{{key}} : {{value*100}}%</li>
 					</ul>
 				</div>
 			</div>

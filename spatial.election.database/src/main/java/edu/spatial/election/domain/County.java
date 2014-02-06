@@ -89,7 +89,8 @@ public class County extends ExportableGeometry implements Serializable {
 	
 
 	
-	@ElementCollection(targetClass = java.lang.Double.class, fetch=FetchType.EAGER)
+	@JsonIgnore
+	@ElementCollection(targetClass = java.lang.Double.class, fetch=FetchType.LAZY)
 	@MapKeyJoinColumn(name = "key_id")
 	@CollectionTable(name = "COUNTY_DATA", joinColumns = @JoinColumn(name = "county_id"))
 	@Column(name = "value")

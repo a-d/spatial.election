@@ -1,8 +1,10 @@
 package edu.spatial.election.backend;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.ws.rs.GET;
@@ -18,6 +20,7 @@ import edu.spatial.election.database.dao.CountyDAO;
 import edu.spatial.election.database.dao.SpatialDAOFactory;
 import edu.spatial.election.database.exceptions.CountyNotFoundException;
 import edu.spatial.election.domain.County;
+import edu.spatial.election.domain.DataKey;
 
 
 @Path("/county")
@@ -97,6 +100,21 @@ public class RestCounty {
 		
 		s.close();
 		return c;
+	}
+	@GET
+	@Path("{id}/data")
+	@Produces({MediaType.APPLICATION_JSON})
+	public Map<DataKey, Double> getCountyDataById(@PathParam("id") long id) throws CountyNotFoundException {
+		Session s = DatabaseConnection.openSession();
+		// Create a DAO
+		CountyDAO countyDAO = f.getCountyDAO();
+		countyDAO.setConnection(s);
+
+		Map<DataKey, Double> out = countyDAO.findCountyById(id).getData();
+		out.size();
+		
+		s.close();
+		return out;
 	}
 	
 	
