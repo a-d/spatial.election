@@ -11,15 +11,15 @@ public class CountyVote {
 	
 	
 	public CountyVote(ElectionResult result, Double influence) {
-		this.partyId = result.getPartyId();
+		this.partyId = result.getParty().getPartyId();
 		this.votes1 = influence * result.getPrimaryVotes();
 		this.votes2 = influence * result.getSecondaryVotes();
-		this.electionId = result.getElectionId();
+		this.electionId = result.getElection().getElectionId();
 	}
 	
 	public void add(ElectionResult result, Double influence)
 	{
-		if(this.partyId == result.getPartyId() && this.electionId == result.getElectionId()) {
+		if(this.partyId == result.getParty().getPartyId() && this.electionId == result.getElection().getElectionId()) {
 			this.votes1 += influence * result.getPrimaryVotes();
 			this.votes2 += influence * result.getSecondaryVotes();
 		}
