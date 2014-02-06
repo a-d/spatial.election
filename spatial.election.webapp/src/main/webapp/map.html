@@ -10,9 +10,25 @@
 
 <div class="container">
 
+       <div ng-init="friends = [{name:'John', phone:123, color:'#ff0'},
+                                {name:'Mary', phone:32545, color:'#0f0'},
+                                {name:'Mike', phone:234, color:'#0ff'},
+                                {name:'Adam', phone:1, color:'#00f'},
+                                {name:'Julie', phone:0, color:'#555'},
+                                {name:'Juliette', phone:1000, color:'#ddd'}]"></div>
+                                <input type="button" value="set" ng-click="friends= []">
+       Search: <input ng-model="searchText">
+       <table id="searchTextResults">
+         <tr><th>Name</th><th>Phone</th></tr>
+         <tr ng-repeat="friend in friends | filter:searchText">
+           <td>{{friend.name}}</td>
+           <td style="background-color:{{friend.color}}">{{friend.phone}}</td>
+         </tr>
+       </table>
+       
 	<div class="page-header">
-	  <h1>&Uuml;berschrift</h1>
-	  <p class="lead">Ein bisschen Text.</p>
+	  <h1>Die Landkreise Deutschlands haben gewählt!</h1>
+	  <p class="lead">Diese interaktive Karte ermöglicht Ihnen die Auswertung der Bundestagswahlergebnisse in Hinblick auf verschiedene Strukturdaten einzelner Landkreise.</p>
 	</div>
 	
 	<div class="row">
