@@ -65,7 +65,9 @@ public class County extends ExportableGeometry implements Serializable {
 
 	// NOT used:
 	// private String nl_name_3;
-	// private String varname_3;
+	@Column(name="varname_3")
+	private String countyNameVars;
+	
 	// private String eng_type_3;
 
 	@Column(name="type_3")
@@ -227,5 +229,13 @@ public class County extends ExportableGeometry implements Serializable {
 
 	public void setData(Map<DataKey, Double> data) {
 		this.data = data;
+	}
+
+	public String getCountyNameVars() {
+		return countyNameVars;
+	}
+
+	public void setCountyNameVars(String countyNameVars) {
+		this.countyNameVars = countyNameVars;
 	}
 }

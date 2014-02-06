@@ -2,7 +2,6 @@ package edu.spatial.election.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -18,18 +17,12 @@ public class CountyData implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "county_Id")
-	private int countyId;
-	
-	@Id
-	@Column(name = "key_Id")
-	private int keyId;
-	
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "county_id")
 	private County county;
 
+	@Id
 	@ManyToOne(fetch=FetchType.EAGER, optional=false)
 	@JoinColumn(name = "key_id")
 	private DataKey key;
