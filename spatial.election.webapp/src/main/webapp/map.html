@@ -5,6 +5,15 @@
 <title>General Election Germany 2013</title>
 <link rel="stylesheet" href="css/app.css">
 <link rel="stylesheet" href="css/bootstrap.min.css">
+
+<!--[if gte IE 9]>
+  <style type="text/css">
+    .gradient {
+       filter: none;
+    }
+  </style>
+<![endif]-->
+
 </head>
 <body ng-controller="mapCtrl">
 
@@ -37,7 +46,6 @@
 				<div class="panel-body">
 					<ul class="list-group">
 						<li class="list-group-item" ng-repeat="res in results">
-							
 							<span style="width:20px; height:20px; background-color:{{res.color}}; color:{{res.color}}; display:inline">.</span> {{res.name}}<br />
 							<span style="font-size:0.6em">{{res.votes1}}</span> (<b>{{res.votes1rel}}%</b>) <span style="font-size:0.6em">Erst-</span> <span style="font-size:0.6em">und {{res.votes2}}</span> (<b>{{res.votes2rel}}%</b>)  <span style="font-size:0.6em">Zweitstimmen</span>
 						</li>
@@ -54,9 +62,9 @@
 			       Search: <input ng-model="searchText">
 			       
 			       <table id="searchTextResults" border="1" style="width:90%">
-			         <tr ng-repeat="(key, val) in countyData | filter:searchText">
-			           <td>{{key}}</td>
-			           <td>{{val}}</td>
+			         <tr ng-repeat="data in countyData | filter:searchText">
+			           <td>{{data.key}}</td>
+			           <td>{{data.value}}</td>
 			         </tr>
        				</table>
 
@@ -69,24 +77,28 @@
 				<div class="panel-body">
 					<ul class="list-group">
 						<li class="list-group-item" ng-repeat="c in constituencyIds">
-						{{c.const.wkr_name}} : {{c.value}}</li>
+							<span style="float:right; ">{{c.value}}%</span>
+							{{c.const.wkr_name}}
+						</li>
 					</ul>
 				</div>
 			</div>
 		</div>
 		
-		<div class="col-md-8">
+		<div class="col-md-8" id="map">
 			<div class="panel panel-info">
 				<div class="panel-heading">
 					<h3 class="panel-title">Deutschland</h3>
 				</div>
 				<div class="panel-body" style="padding:0px">
 					<div id="mysvg"></div>
+					<span id="impressum">&copy; Martin Liesenberg & Alexander D&uuml;mont - <a href="https://github.com/a-d/spatial.election">GitHub</a></span>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
 
 <script src="lib/angular/angular.js"></script>
 <script src="lib/angular/angular-resource.js"></script>

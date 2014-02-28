@@ -3,8 +3,11 @@ var ELECTION_PARTIES = [];
 
 angular.module('myApp.controllers', [])
 .controller('mapCtrl', function mapCtrl($scope, d3, Counties, Parties, CountyData, Constituency) {
+	var titleBar = d3.select("#map .panel-title")[0][0];
+	var titleHTML = titleBar.innerHTML;
+	titleBar.innerHTML += " - wird geladen...";
 	
-
+	
 	Parties.get().$promise.then(function(parties) {
 		ELECTION_PARTIES = parties;
 	});
@@ -12,6 +15,13 @@ angular.module('myApp.controllers', [])
 	
 	Counties.get({'level' : 2}).$promise.then(function(counties) {
 		displayWahlkreise(counties);
+
+		with(d3.select("#map")[0][0]) {
+			setAttribute("style", "position:fixed; top:"+offsetTop+"px; left:"+offsetLeft+"px; width:"+offsetWidth+"px; height:"+offsetHeight+"px;");
+		}
+		
+		titleBar.innerHTML = titleHTML;
+		
 	});
 
 	var showCounty = function(
@@ -47,8 +57,13 @@ angular.module('myApp.controllers', [])
 			var results = [];
 			var constituencies = [];
 
-			var maxVotes1 = 1, maxVotes2 = 1; 
+			
+			// compute maxima and sum of primary and secondary votes for a given county e
+			
+			var maxVotes1 = 1, maxVotes2 = 1, sumVotes1 = 0, sumVotes2 = 0; 
 			for(var i=0; i<e.results.length; i++) {
+				sumVotes1 += e.results[i].votes1 || 0;
+				sumVotes2 += e.results[i].votes2 || 0;
 				if(e.results[i].votes1>maxVotes1) {
 					maxVotes1 = e.results[i].votes1;
 				}
@@ -57,6 +72,9 @@ angular.module('myApp.controllers', [])
 				}
 			}
 			
+			
+			// prepare county voting results with parties
+			
 			for(var i=0; i<e.results.length; i++) {
 				var name = getFromPartyIterator(
 						function(party) { return party.partyId==e.results[i].partyId; },
@@ -64,30 +82,40 @@ angular.module('myApp.controllers', [])
 				var color = getFromPartyIterator(
 						function(party) { return party.partyId==e.results[i].partyId; },
 						function(party) { return party!=null ? party.color : "#999999" });
-				results[results.length] = {
-						"name" : name,
-						"color" : color,
-						"electionId" : e.results[i].electionId,
-						"votes1" : Math.round(e.results[i].votes1),
-						"votes1rel" : Math.round(10000*e.results[i].votes1/maxVotes1)/100 || "",
-						"votes2" : Math.round(e.results[i].votes2),
-						"votes2rel" : Math.round(10000*e.results[i].votes2/maxVotes2)/100 || ""
-				};
+				
+				
+				if(e.results[i].votes1>0 || e.results[i].votes2>0) {
+					results[results.length] = {
+							"name" : name,
+							"color" : color,
+							"electionId" : e.results[i].electionId,
+							"votes1" : Math.round(e.results[i].votes1),
+							"votes1rel" : (100*e.results[i].votes1/sumVotes1).toFixed(2) || "",
+							"votes2" : Math.round(e.results[i].votes2),
+							"votes2rel" : (100*e.results[i].votes2/sumVotes2).toFixed(2) || ""
+					};
+				}
 			}
-
 		    results.sort(function(a, b){
 		        a = a.votes1 || 0;
-		        b = b.votes2 || 0;
+		        b = b.votes1 || 0;
 		        return b - a;
 		    });
+		    
+		    
+		    // prepare constituencies
 			
 			for(var key in e.constituencies) {
 				constituencies[constituencies.length] = {
 					"const" : Constituency.get({'id' : key}),
-					"value" : e.constituencies[key]
+					"value" : (100*e.constituencies[key]).toFixed(2)
 				}
 			}
-			
+			constituencies.sort(function(a, b){
+		        a = a.value;
+		        b = b.value;
+		        return b - a;
+		    });
 			
 			showCounty(
 					e.county.gid,
@@ -182,11 +210,6 @@ angular.module('myApp.controllers', [])
 		g.append("rect").attr("class", "overlay").attr("width", width).attr("height", height);
 		g = g.append("g");
 		
-		/*
-		var g = vis.append("g").call(zoom);
-		g.append("rect").attr("class", "overlay").attr("width", width).attr("height", height);
-*/
-
 
 		var doclick = false;
 		var features = g.selectAll("g")
@@ -210,8 +233,9 @@ angular.module('myApp.controllers', [])
 			.on("mousedown", function() { doclick = true; })
 	
 			.selectAll("polygon")
-				.data(function(d) { 
-					return d.county.coordinates; }).enter().append("polygon")
+				.data(function(d) { return d.county.coordinates; })
+				.enter()
+				.append("polygon")
 				.attr("points", drawCoordinatePoints);
 
 	};

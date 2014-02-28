@@ -1,10 +1,11 @@
 package edu.spatial.election.backend;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.ws.rs.GET;
@@ -101,19 +102,37 @@ public class RestCounty {
 		s.close();
 		return c;
 	}
+	
+	
+	
+	public class CountyDataPair {
+		public String key;
+		public Double value;
+		public CountyDataPair(String key, Double value) {
+			this.key = key;
+			this.value = value;
+		}
+	}
+	
+	
 	@GET
 	@Path("{id}/data")
 	@Produces({MediaType.APPLICATION_JSON})
-	public Map<DataKey, Double> getCountyDataById(@PathParam("id") long id) throws CountyNotFoundException {
+	public List<CountyDataPair> getCountyDataById(@PathParam("id") long id) throws CountyNotFoundException {
 		Session s = DatabaseConnection.openSession();
 		// Create a DAO
 		CountyDAO countyDAO = f.getCountyDAO();
 		countyDAO.setConnection(s);
 
-		Map<DataKey, Double> out = countyDAO.findCountyById(id).getData();
-		out.size();
-		
+		List<CountyDataPair> out = new LinkedList<CountyDataPair>();
+		Map<DataKey, Double> data = new TreeMap<DataKey, Double>(countyDAO.findCountyById(id).getData());
+
+		for(Entry<DataKey, Double> entry : data.entrySet()) {
+			out.add(new CountyDataPair(entry.getKey().toString(), entry.getValue()));
+		}
+
 		s.close();
+		
 		return out;
 	}
 	

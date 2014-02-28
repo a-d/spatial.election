@@ -12,9 +12,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @Table(name="DATA_KEY")
-public class DataKey {
+public class DataKey implements Comparable<DataKey> {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
@@ -23,12 +25,18 @@ public class DataKey {
 	@Column(unique=true, nullable=false)
 	private String name;
 
+	@JsonIgnore
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="key")
 	private Set<ConstituencyData> constituencyData = new HashSet<ConstituencyData>();
 
+	@JsonIgnore
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="key")
 	private Set<CountyData> countyData = new HashSet<CountyData>();
 	
+
+	public int compareTo(DataKey o) {
+		return getName().compareTo(o.getName());
+	}
 	
 	@Override
 	public String toString() {
@@ -66,6 +74,7 @@ public class DataKey {
 	public void setCountyData(Set<CountyData> countyData) {
 		this.countyData = countyData;
 	}
+
 
 
 }

@@ -78,6 +78,35 @@ public class Constituency extends ExportableGeometry implements Serializable {
 	@Column(name = "value")
 	private Map<DataKey, Double> data = new HashMap<DataKey, Double>();
 
+	
+	public static Constituency createSaveProxy(final Constituency c) {
+		Constituency prox = new Constituency() { 
+			@Override
+			public List<CountyContainsConstituency> getDependingCounties() {
+				return c.getDependingCounties();
+			}
+			@Override
+			public Set<ElectionResult> getElectionResults() {
+				return c.getElectionResults();
+			}
+			@Override
+			public MultiPolygon getGeom() {
+				return c.getGeom();
+			}
+			@Override
+			public Point getCenterPoint() {
+				return c.getCenterPoint();
+			}
+		};
+		prox.setGid(c.getGid());
+		prox.setWkr_nr(c.getWkr_nr());
+		prox.setWkr_name(c.getWkr_name());
+		prox.setLand_nr(c.getLand_nr());
+		prox.setLand_name(c.getLand_name());
+		prox.setData(c.getData());
+		return prox;
+	}
+	
 
 	public long getGid() {
 		return gid;

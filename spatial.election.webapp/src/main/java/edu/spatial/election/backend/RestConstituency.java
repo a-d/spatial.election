@@ -66,8 +66,13 @@ public class RestConstituency {
 		constituencyDAO.setConnection(s);
 
 		Constituency c = constituencyDAO.findConstituencyById(id);
-		
 		s.close();
+		
+		
+		// cannot return c because it is just a Hibernate facade
+		// that's why we need to create a properties-save proxy
+		c = Constituency.createSaveProxy(c);
+
 		return c;
 	}
 }

@@ -28,7 +28,17 @@ angular.module('myApp.services', ['ngResource']) //
 	var baseurl = 'backend/county/';
 	return $resource(baseurl + ':id/data', {
 		id : '@id'
-	});
+	},
+	{
+        'get': {
+            method: 'GET',
+            transformResponse: function (data) {
+            	var dat = angular.fromJson(data);
+            	return dat.list ? dat.list : dat;
+            },
+            isArray: true
+        }
+    });
 }])
 .factory('Parties', [ '$resource', function($resource) {
 	var baseurl = 'backend/party/';
