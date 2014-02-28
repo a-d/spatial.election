@@ -11,7 +11,7 @@
 	<parent>
 		<artifactId>root</artifactId>
 		<groupId>edu.spatial.election</groupId>
-		<version>0.1</version>
+		<version>1.0</version>
 		<relativePath>../spatial.election.root/pom.xml</relativePath>
 	</parent>
 	
