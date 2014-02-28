@@ -31,13 +31,6 @@
 			<version>${project.parent.version}</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-			<groupId>edu.spatial.election</groupId>
-			<artifactId>parsers</artifactId>
-			<version>${project.parent.version}</version>
-			<scope>compile</scope>
-		</dependency>
-
 		
 
 		<!-- misc -->
