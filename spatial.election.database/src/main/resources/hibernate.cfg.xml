@@ -13,7 +13,7 @@
 		<property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
 		<property name="hibernate.connection.username">postgres</property>
 		<property name="hibernate.connection.password">postgres</property>
-		<property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/spatialdb_project</property>
+		<property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/spatial_election</property>
 
 
 		<property name="connection_pool_size">5</property>
