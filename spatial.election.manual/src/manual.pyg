@@ -1,0 +1,17 @@
+CREATE TABLE electionresult
+(
+  constituencyid integer NOT NULL,
+  partyid integer NOT NULL,
+  "primaryVotes" integer,
+  "secondaryVotes" integer,
+  election_electionid bigint,
+  CONSTRAINT constituency_fk FOREIGN KEY (constituencyid)
+      REFERENCES constituency (gid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT election_fk FOREIGN KEY (election_electionid)
+      REFERENCES election (electionid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT party_fk FOREIGN KEY (partyid)
+      REFERENCES party (partyid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)

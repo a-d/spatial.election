@@ -1,0 +1,45 @@
+
+\section{Setup Postgres}
+
+You can setup a valid PostgreSQL environment including PostGIS by
+following the two steps:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Visit the \href{http://www.postgresql.org/}{PostgreSQL website} and
+  download the current version. (e.g. \textbf{9.3})
+\item
+  Visit the \href{http://postgis.net/}{PostGIS website} and download the
+  current version. (e.g. \textbf{2.1})
+\end{enumerate}
+
+If you are running a Debian system, we recommend installing a
+precompiled version. In that case, please follow the
+\href{https://wiki.postgresql.org/wiki/Apt}{official instructions} to do
+so. As soon as you registered the postgres related APT pgdg repository,
+you can run the following command:
+\texttt{\# apt-get install postgresql-server-dev-9.3 postgresql-9.3-postgis-2.1}
+
+If you are running a Windows system and you are asked to whether or not
+insall plugins, during the installation process; feel free to install
+the delivered PostGIS plugin. It may not be the newest version, but it
+will suffice.
+
+\subsection{Importing the Database}\label{importing-the-database}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  To import the database, you need to first create a database:
+  \texttt{\$ createdb spatial\_election -{}-encoding UNICODE -{}-template=template0    \$ psql spatial\_election    \textgreater{} CREATE EXTENSION postgis;    \textgreater{} CREATE EXTENSION postgis\_topology;    \textgreater{} \textbackslash{}q}
+\item
+  Then you need to restore the database dump file to your database. You
+  need to dowmload the
+  \href{https://github.com/a-d/spatial.election/raw/master/spatial.election.data/spatial_db.backup}{spatial\_db.backup
+  file}. \texttt{pg\_restore -d spatial\_election spatial\_db.backup}
+\item
+  Create a role with password according to
+  \href{https://github.com/a-d/spatial.election/blob/master/spatial.election.database/src/main/resources/hibernate.cfg.xml}{your
+  hibernate.cfg.xml}
+\end{enumerate}

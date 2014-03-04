@@ -1,0 +1,139 @@
+
+\section{Frontend}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Structuring the page
+\item
+  Building the map
+\item
+  Getting the data
+\end{enumerate}
+
+\subsection{Structuring the page}\label{structuring-the-page}
+
+As mentioned in the {[}{[}Frameworks\textbar{}Frameworks{]}{]} Section
+we used the Twitter Bootstrap Framework to desgin our application.
+Though responsive design is not a priority, the framework does provide
+easy to use abstractions to structure a page, plus makes it easy to
+stick to a coherent design.
+
+By providing HTML tags with predefined class attributes Bootstrap
+enables its user to easily enhance his/her application. The following
+snippet divides the page horizontally in two sections, one a third of
+the total width, the other two thirds.
+
+
+\begin{lstlisting}
+<div class="row">
+	<div class="col-md-4">
+        .....
+        </div>
+	<div class="col-md-8">
+        ....
+        </div>
+</div>
+\end{lstlisting}
+
+
+
+\subsection{Building the map}\label{building-the-map}
+
+Within the main div tag of the page the map is displayed.
+
+
+
+\begin{lstlisting}
+<div class="panel-body" style="padding:0px">
+    <div id="mysvg"></div>
+</div>
+\end{lstlisting}
+
+
+As described elsewhere the data to be displayed is loaded on startup
+with a call to the REST API provided by our backend.
+
+First a \emph{svg} element and a projection are created.
+
+\begin{lstlisting}
+var vis = d3.select("#mysvg").append("svg:svg").attr("width", width).attr("height", height); 
+var projection = d3.geo.mercator().center([10.45, 51.30]).scale(2500).translate([width/2,height/2]);
+\end{lstlisting}
+
+
+Later all counties are added to this element. Additionally, a zoom
+handler (displayed below) and a click handler are added to look closer
+at a county and to display the extrapolated data in the column next to
+the map. All counties are colored according to the party who won the
+majority of the vote.
+
+
+\begin{lstlisting}
+var zooming = false;
+var zoom = d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", function() {
+    if(!zooming) {
+        doclick = false;
+        zooming = true;
+        var scale = d3.event.scale;
+        var trans = scale == 1 ? "0.0, 0.0" : d3.event.translate;
+        g.attr("transform", "translate(" + trans + ") scale(" + scale + ")");
+        features.attr("stroke-width", strokeWidth(scale) + "");
+        zooming = false;
+    }
+});
+var g = vis.append("g").call(zoom);
+\end{lstlisting}
+
+
+\subsubsection{Getting the data}\label{getting-the-data}
+
+The data is provided by calls to the RESTful API of the application. For
+each class of entities we need we defined a \emph{factory} encapsulating
+a \emph{resource} object, a service from the
+\href{http://docs.angularjs.org/api/ngResource}{\emph{ngResource}}
+module as provided by AngularJS. Through the object returned by the
+factory one can conveniently execute \emph{get}, \emph{post}, \emph{put}
+and \emph{delete} requests. For our use case \emph{get} is normally
+enough. An example implementation is shown below.
+
+
+
+\begin{lstlisting}
+angular.module('myApp.services', ['ngResource'])
+.factory('Counties', [ '$resource', function($resource) {
+	var baseurl = 'backend/county/votes/';
+	return $resource(baseurl + ':level/', {
+		id : '@level'
+	},
+    {
+        'get': {
+            method: 'GET',
+            transformResponse: function (data) {
+            	var dat = angular.fromJson(data);
+            	return dat.list ? dat.list : dat;
+            },
+            isArray: true
+        }
+    });
+}])
+\end{lstlisting}
+
+A \emph{get} request is dispatched as follows. First the factory is
+injected into the controller which is using it by passing it as an
+argument, then a simple function invocation is made.
+
+
+
+\begin{lstlisting}
+// simplified example
+angular.module('myApp.controllers', [])
+.controller('mapCtrl', function mapCtrl($scope, Counties, ...) {
+	Counties.get({'level' : 2}).$promise.then(function(counties) {
+		displayWahlkreise(counties);
+	});
+});
+\end{lstlisting}
+
+

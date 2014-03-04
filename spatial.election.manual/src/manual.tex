@@ -1,0 +1,77 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{courier}
+\usepackage{listings}
+\usepackage{makeidx}
+
+\usepackage[T1]{fontenc}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{ae}
+\usepackage[latin1]{inputenc}
+\usepackage[english]{babel}
+\usepackage{lastpage}
+
+\usepackage{inconsolata}
+
+\usepackage{color}
+
+\definecolor{pblue}{rgb}{0.13,0.13,1}
+\definecolor{pgreen}{rgb}{0,0.5,0}
+\definecolor{pred}{rgb}{0.9,0,0}
+\definecolor{pgrey}{rgb}{0.46,0.45,0.48}
+
+\usepackage{listings}
+\lstset{language=Java,
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  commentstyle=\color{pgreen},
+  keywordstyle=\color{pblue},
+  stringstyle=\color{pred},
+  basicstyle=\ttfamily,
+  moredelim=[il][\textcolor{pgrey}]{$$},
+  moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
+}
+
+\begin{document}
+
+
+
+\title{Spatial Election}
+\author{Martin Liesenberg and Alexander D\"umont}
+\date{\today}
+\maketitle
+
+\newpage
+\setcounter{tocdepth}{2}
+\tableofcontents
+
+\newpage
+\include{sections/home}
+
+\include{sections/description}
+
+\include{sections/strategy}
+
+\include{sections/datamodel}
+
+\include{sections/datalayer}
+
+\include{sections/constituencies-counties}
+
+\include{sections/frontend}
+
+\include{sections/setup-eclipse}
+
+\include{sections/setup-postgres}
+
+\include{sections/running}
+
+
+
+\end{document}
