@@ -4,3 +4,5 @@ target
 .project
 .settings
 /spatial.election.slides/.texlipse
+/spatial.election.manual/out
+/spatial.election.manual/tmp
