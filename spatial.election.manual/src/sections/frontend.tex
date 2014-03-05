@@ -1,6 +1,8 @@
 
 \section{Frontend}
 
+The frontend can be described best by giving general information about:
+
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \itemsep1pt\parskip0pt\parsep0pt
@@ -14,7 +16,7 @@
 
 \subsection{Structuring the page}\label{structuring-the-page}
 
-As mentioned in the {[}{[}Frameworks\textbar{}Frameworks{]}{]} Section
+As mentioned in the Frameworks Section
 we used the Twitter Bootstrap Framework to desgin our application.
 Though responsive design is not a priority, the framework does provide
 easy to use abstractions to structure a page, plus makes it easy to
@@ -26,7 +28,7 @@ snippet divides the page horizontally in two sections, one a third of
 the total width, the other two thirds.
 
 
-\begin{lstlisting}
+\begin{lstlisting}[language=HTML]
 <div class="row">
 	<div class="col-md-4">
         .....
@@ -45,7 +47,7 @@ Within the main div tag of the page the map is displayed.
 
 
 
-\begin{lstlisting}
+\begin{lstlisting}[language=HTML]
 <div class="panel-body" style="padding:0px">
     <div id="mysvg"></div>
 </div>
@@ -72,7 +74,8 @@ majority of the vote.
 
 \begin{lstlisting}
 var zooming = false;
-var zoom = d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", function() {
+var zoom = d3.behavior.zoom().scaleExtent([1, 8])
+  .on("zoom", function() {
     if(!zooming) {
         doclick = false;
         zooming = true;
@@ -102,7 +105,8 @@ enough. An example implementation is shown below.
 
 \begin{lstlisting}
 angular.module('myApp.services', ['ngResource'])
-.factory('Counties', [ '$resource', function($resource) {
+.factory('Counties', [ '$resource',
+  function($resource) {
 	var baseurl = 'backend/county/votes/';
 	return $resource(baseurl + ':level/', {
 		id : '@level'

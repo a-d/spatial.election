@@ -16,40 +16,63 @@ takes are 6 easy steps:
   \href{https://github.com/a-d/spatial.election/archive/master.zip}{spatial.election}
   files.
 \item
-  Start Eclipse. \includegraphics[width=1.1\textwidth]{../img/GMXSI1f.png}
+  Start Eclipse, see figure \ref{eclipse01}.
+  
+  \begin{figure}[htbp]
+  \centering
+  \includegraphics[width=1.1\textwidth]{../img/GMXSI1f.png}
+  \caption{Eclipse Startup}
+  \label{eclipse01}
+  \end{figure}
+  
 \item
   Check whether M2E is installed. It's a plugin for eclipse, providing
   Maven features. Go to \textbf{Help} -\textgreater{} \textbf{Install
   New Software}. Enter the site ``\textbf{M2E -
   !http://download.eclipse.org/technology/m2e/releases}''. Install
   ``Maven Integration for Eclipse'' if it is not yet installed. Restart
-  Eclipse if necessary.
+  Eclipse if necessary. See figure \ref{eclipse02}. \\
 
   \begin{figure}[htbp]
   \centering
   \includegraphics[width=1.1\textwidth]{../img/nO8HPxH.png}
-  \caption{eclipse m2e}
+  \caption{Eclipse M2E installation}
+  \label{eclipse02}
   \end{figure}
 \item
   Import the \emph{spatial.election} project, by using \textbf{File}
-  -\textgreater{} \textbf{Import}, check ``Existing Maven Projects''.
+  -\textgreater{} \textbf{Import}, check ``Existing Maven Projects''. See figure
+  \ref{eclipse03}.
+  
+  \begin{figure}[htbp]
+  \centering
   \includegraphics[width=1.1\textwidth]{../img/OozCHLd.png}
+  \caption{Eclipse project import}
+  \label{eclipse03}
+  \end{figure}
 \item
   Enter the path to your unziped \emph{spatial.election} files. Check
   all projects and skip through the following \emph{Import} dialogs.
+   See figure \ref{eclipse04}.
+   
+  \begin{figure}[htbp]
+  \centering
   \includegraphics[width=1.1\textwidth]{../img/vBZ4xNA.png}
+  \caption{Eclipse path and project selection}
+  \label{eclipse04}
+  \end{figure}
 \end{enumerate}
 
 \begin{center}\rule{3in}{0.4pt}\end{center}
 
-Congratulation, you've did it! Now you are ready to use the
-\emph{spatial.election} software with source code. You can alter the
-code, as well as build and run the application. If you already have
-{[}{[}Setup the PostgreSQL server\textbar{}Setup-PostgreSQL{]}{]} you
-can go on learning how to {[}{[}use the software\textbar{}Running{]}{]}.
+Now Eclipse is ready to use the
+\emph{spatial.election} software with source code, see figure \ref{eclipse05}
+The code can be altered, as well as build and run as application. If the Setup
+of PostgreSQL server is already done, the software is ready to run.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=1.1\textwidth]{../img/EeGnXjg.png}
-\caption{eclipse ready}
+\caption{Eclipse complete setup}
+\label{eclipse05}
 \end{figure}

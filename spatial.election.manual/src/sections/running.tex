@@ -3,28 +3,42 @@
 
 
 There are 3 different ways to run the application. But first open up
-Eclipse, you previously have {[}{[}set up\textbar{}Setup-Eclipse{]}{]}.
+Eclipse, which has been previously have set
+up.
 
-\subsection{1) Debugging inside of
+\subsection{Debugging inside of
 Eclipse}\label{debugging-inside-of-eclipse}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
   Create a \emph{Run Configuration} with ``jetty:run'' as goal for the
-  \emph{webapp} project.
-  \includegraphics[width=1.1\textwidth]{../img/dwACYmd.png}
+  \emph{webapp} project. See figure \ref{run01}.
+  
 \item
   Save configuration and run it. If the program runs properly the
-  console should look something like this:
-  \includegraphics[width=1.1\textwidth]{../img/UZXVJIp.png}
+  console should look something like in figure \ref{run02}.
 \item
   Use your browser to open http://localhost:8080/election
 \end{enumerate}
 
+\begin{figure}[htbp]
+\centering
+  \includegraphics[width=1.1\textwidth]{../img/dwACYmd.png}
+\caption{Eclipse run configuration}
+\label{run01}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+  \includegraphics[width=1.1\textwidth]{../img/UZXVJIp.png}
+\caption{Eclipse project run in Console view}
+\label{run02}
+\end{figure}
+
 \begin{center}\rule{3in}{0.4pt}\end{center}
 
-\subsection{2) Running a build executable
+\subsection{Running a build executable
 jar}\label{running-a-build-executable-jar}
 
 \begin{enumerate}
@@ -32,22 +46,52 @@ jar}\label{running-a-build-executable-jar}
 \itemsep1pt\parskip0pt\parsep0pt
 \item
   Run the Maven command ``Install'' on the root project, to build all
-  files. \includegraphics[width=1.1\textwidth]{../img/fvcN51B.png}
+  files. See figure \ref{run03}
+  
 \item
   The build might take some seconds. In the end there should be an
-  ``BUILD SUCCESS''. !(eclipse build2{]}(http://i.imgur.com/v13HHJO.png)
+  ``BUILD SUCCESS''. See figure \ref{run04}
+  
+  
 \item
   Go to the ``server'' subproject directory, navigate to target. There
   you should find an executable jar. You can start it with \emph{java
-  -jar {[}\ldots{}{]}.jar}.
-  \includegraphics[width=1.1\textwidth]{../img/wFn3GVG.png}
+  -jar {[}\ldots{}{]}.jar}. The command window should look like in figure
+  \ref{run05}.
+  
+  
+  
 \item
   Use your browser to open http://localhost:9191/
 \end{enumerate}
 
+\begin{figure}[htbp]
+\centering
+  \includegraphics[width=1.1\textwidth]{../img/fvcN51B.png}
+\caption{Eclipse Maven install run}
+\label{run03}
+\end{figure}
+
+
+\begin{figure}[htbp]
+\centering
+  \includegraphics[width=1.1\textwidth]{../img/v13HHJO.png}
+\caption{Eclipse Maven build successfuly}
+\label{run04}
+\end{figure}
+  
+  
+\begin{figure}[htbp]
+\centering
+  \includegraphics[width=1.1\textwidth]{../img/wFn3GVG.png}
+\caption{Java execution of the project binary}
+\label{run05}
+\end{figure}
+
 \begin{center}\rule{3in}{0.4pt}\end{center}
 
-\subsection{3) Running a build war file with
+
+\subsection{Running a build war file with
 Tomcat}\label{running-a-build-war-file-with-tomcat}
 
 \begin{enumerate}

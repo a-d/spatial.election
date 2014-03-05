@@ -1,7 +1,7 @@
 
 \section{Setup Postgres}
 
-You can setup a valid PostgreSQL environment including PostGIS by
+A valid PostgreSQL environment including PostGIS can be set up by
 following the two steps:
 
 \begin{enumerate}
@@ -14,12 +14,15 @@ following the two steps:
   current version. (e.g. \textbf{2.1})
 \end{enumerate}
 
-If you are running a Debian system, we recommend installing a
-precompiled version. In that case, please follow the
+If a Debian system is running, installing a
+precompiled version is recommend. In that case, follow the
 \href{https://wiki.postgresql.org/wiki/Apt}{official instructions} to do
-so. As soon as you registered the postgres related APT pgdg repository,
-you can run the following command:
-\texttt{\# apt-get install postgresql-server-dev-9.3 postgresql-9.3-postgis-2.1}
+so. As soon as the postgres related APT pgdg repository is registered,
+the following command can be run:
+
+\begin{lstlisting}[numbers=none, language=bash]
+$ apt-get install postgresql-server-dev-9.3 postgresql-9.3-postgis-2.1
+\end{lstlisting}
 
 If you are running a Windows system and you are asked to whether or not
 insall plugins, during the installation process; feel free to install
@@ -32,12 +35,24 @@ will suffice.
 \def\labelenumi{\arabic{enumi}.}
 \item
   To import the database, you need to first create a database:
-  \texttt{\$ createdb spatial\_election -{}-encoding UNICODE -{}-template=template0    \$ psql spatial\_election    \textgreater{} CREATE EXTENSION postgis;    \textgreater{} CREATE EXTENSION postgis\_topology;    \textgreater{} \textbackslash{}q}
+
+\begin{lstlisting}[numbers=none, language=bash]
+$ createdb spatial_election --encoding UNICODE --template=template0
+$ psql spatial_election
+> CREATE EXTENSION postgis;
+> CREATE EXTENSION postgis_topology;   
+> \q
+\end{lstlisting}
 \item
   Then you need to restore the database dump file to your database. You
   need to dowmload the
   \href{https://github.com/a-d/spatial.election/raw/master/spatial.election.data/spatial_db.backup}{spatial\_db.backup
-  file}. \texttt{pg\_restore -d spatial\_election spatial\_db.backup}
+  file}.
+
+\begin{lstlisting}[numbers=none, language=bash]
+$ pg_restore -d spatial_election spatial_db.backup
+\end{lstlisting}
+
 \item
   Create a role with password according to
   \href{https://github.com/a-d/spatial.election/blob/master/spatial.election.database/src/main/resources/hibernate.cfg.xml}{your

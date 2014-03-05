@@ -1,4 +1,4 @@
-\documentclass[a4paper,11pt]{article}
+\documentclass[a4paper,10pt]{article}
 
 \usepackage{graphicx}
 \usepackage{hyperref}
@@ -14,8 +14,6 @@
 \usepackage[english]{babel}
 \usepackage{lastpage}
 
-\usepackage{inconsolata}
-
 \usepackage{color}
 
 \definecolor{pblue}{rgb}{0.13,0.13,1}
@@ -25,6 +23,9 @@
 
 \usepackage{listings}
 \lstset{language=Java,
+  frame=bt,
+  numbers=left,
+  basicstyle=\small\ttfamily,
   showspaces=false,
   showtabs=false,
   breaklines=true,
@@ -37,6 +38,7 @@
   moredelim=[il][\textcolor{pgrey}]{$$},
   moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
 }
+
 
 \begin{document}
 
@@ -71,7 +73,5 @@
 \include{sections/setup-postgres}
 
 \include{sections/running}
-
-
 
 \end{document}

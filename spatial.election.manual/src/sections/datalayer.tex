@@ -1,6 +1,6 @@
 
 \section{Database Layer}
-
+The data layer is described by three components:
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \itemsep1pt\parskip0pt\parsep0pt
@@ -12,7 +12,7 @@
   JAX-RS API 2.0
 \end{enumerate}
 
-\subsubsection{1. Hibernate}\label{hibernate}
+\subsection{Hibernate}\label{hibernate}
 
 Hibernate is an open source persistence and ORM framework for Java. It
 is being used to map Java classes to database tables and provides means
@@ -38,19 +38,15 @@ private int wkr_nr;
 @Column(columnDefinition="Geometry")
 private Point centerPoint;
 
-// ...
-
 // defining a 1 <-> n relation between constituency and county
 @OneToMany(fetch=FetchType.LAZY)
 @JoinColumn(name="constituency_id", referencedColumnName="wkr_nr")
 @OrderBy("areaQuota")
 private List<CountyContainsConstituency> dependingCounties = new LinkedList<CountyContainsConstituency>();
-
-// ...
 \end{lstlisting}
 
-
-\subsubsection{2. Data Access Object}\label{data-access-object}
+\newpage
+\subsection{Data Access Object}\label{data-access-object}
 
 \begin{figure}[htbp]
 \centering
@@ -79,7 +75,8 @@ using the application or simply decides to switch the underlying
 database they simply need to implement another set of Data Access Object
 classes.
 
-\subsubsection{3. JAX-RS API 2.0}\label{jax-rs-api-2.0}
+\newpage
+\subsection{JAX-RS API 2.0}\label{jax-rs-api-2.0}
 
 With the help of JAX-RS plain Java Objects can be exposed as RESTful Web
 resources independent of the underlying technology using a declarative
@@ -87,16 +84,15 @@ and annotation based API.
 
 \begin{lstlisting}
 @Path("/constituency")
-public class RestConstituency \{
+public class RestConstituency {
     private SpatialDAOFactory f = SpatialDAOFactory.getDAOFactory(SpatialDAOFactory.POSTGIS);
-
 	// ...
 	
     @GET
     @Path("{id}/geometry")
     @Produces({MediaType.APPLICATION_JSON})
     public double[][][] getConstituencyGeometryById(@PathParam("id") long id)
-    \{ Session s = DatabaseConnection.openSession();
+    { Session s = DatabaseConnection.openSession();
         // Create a DAO
         ConstituencyDAO constituencyDAO = f.getConstituencyDAO();
         constituencyDAO.setConnection(s);
@@ -108,10 +104,10 @@ public class RestConstituency \{
 		
 	s.close();
 	return result;
-    \}
+    }
     
 	// ...
-\}
+}
 \end{lstlisting}
 
 \texttt{@Path} specifies the relative path of the function,

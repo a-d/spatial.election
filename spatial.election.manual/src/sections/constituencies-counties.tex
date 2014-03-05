@@ -15,39 +15,70 @@
   \emph{Constituency}
 \end{enumerate}
 
-\subsection{1. About Wahlkreise and
+\subsection{About Wahlkreise and
 Landkreise}\label{about-wahlkreise-and-landkreise}
 
-\emph{{[}Description{]}}
+Landkreise (counties) and Wahlkreise (constituencies) have different borders.
+One does not contain the other. In order to understand the problem it is
+recommended to configure and visualize the map in QGIS.
 
-\subsection{2. Configuration and Visualization in QGIS
+\subsection{Configuration and Visualization in QGIS
 Desktop}\label{configuration-and-visualization-in-qgis-desktop}
 
 \subsubsection{Requirements}\label{requirements}
 
-Available Layers *
-\href{http://www.bundeswahlleiter.de/en/bundestagswahlen/BTW_BUND_13/wahlkreiseinteilung/kartographische_darstellung.html}{Wahlkreise}
-* Download:
-\href{http://www.bundeswahlleiter.de/de/bundestagswahlen/BTW_BUND_13/wahlkreiseinteilung/wahlkreisgeometrie/Geometrie_Wahlkreise_18DBT_VG1000_ETRS89.zip}{SHP}
-* Projection: \textbf{EPSG:3044 - ETRS89 / ETRS-TM32} *
-\href{http://www.gadm.org/country}{Landkreise} * Download
-\href{http://biogeo.ucdavis.edu/data/gadm2/shp/DEU_adm.zip}{SHP} *
-Projection: \textbf{EPSG:4326 - WGS84}
+Available Layers
 
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+	\href{http://www.bundeswahlleiter.de/en/bundestagswahlen/BTW_BUND_13/wahlkreiseinteilung/kartographische_darstellung.html}{Wahlkreise}
+
+	\begin{itemize}
+	\itemsep1pt\parskip0pt\parsep0pt
+	\item 
+	Download:
+	\href{http://www.bundeswahlleiter.de/de/bundestagswahlen/BTW_BUND_13/wahlkreiseinteilung/wahlkreisgeometrie/Geometrie_Wahlkreise_18DBT_VG1000_ETRS89.zip}{SHP}
+	\item
+	Projection: \textbf{EPSG:3044 - ETRS89 / ETRS-TM32}
+
+\end{itemize}
+
+\item
+	\href{http://www.gadm.org/country}{Landkreise}
+	
+	\begin{itemize}
+	\itemsep1pt\parskip0pt\parsep0pt
+	\item 
+	Download: \href{http://biogeo.ucdavis.edu/data/gadm2/shp/DEU_adm.zip}{SHP}
+	\item
+	Projection: \textbf{EPSG:4326 - WGS84}
+	\end{itemize}
+
+\end{itemize}
 \subsubsection{Visualization}\label{visualization}
+
+
+The visualization can be seen in figure \ref{WahlkreiseNLandkreise1}.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=1.1\textwidth]{../img/K4GjcyV.png}
-\caption{WahlkreiseNLandkreise1}
+\caption{Wahlkreise and Landkreise merged inside QGIS}
+\label{WahlkreiseNLandkreise1}
 \end{figure}
 
 \subsubsection{Issues}\label{issues}
 
+A problem occuring with Landkreise (counties) and Wahlkreise (constituencies)
+is, as described in the introduction, that both do not have the same borders.
+This can be clearly seen in comparision figure \ref{WahlkreisVLandkreis}.
+
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=1.1\textwidth]{../img/HdnNLcV.png}
-\caption{WahlkreisVLandkreis}
+\caption{Wahlkreis (constituency) next to Landkreis (county)}
+\label{WahlkreisVLandkreis}
 \end{figure}
 
 \begin{enumerate}
@@ -61,7 +92,7 @@ Projection: \textbf{EPSG:4326 - WGS84}
   accuracy in position and detail when it comes to border polygons.
 \end{enumerate}
 
-\subsection{3. Setup for Postgres
+\subsection{Setup for Postgres
 (+Postgis)}\label{setup-for-postgres-postgis}
 
 \begin{enumerate}
@@ -88,7 +119,7 @@ Projection: \textbf{EPSG:4326 - WGS84}
   dependencies between ``county'' and ``constituency'':
 \end{enumerate}
 
-\begin{lstlisting}
+\begin{lstlisting}[language=SQL]
 -- delete old view
 DROP MATERIALIZED VIEW IF EXISTS public.county_intersecting_constituency;
 
@@ -123,12 +154,12 @@ CREATE UNIQUE INDEX county_intersecting_constituency_unique
   ON public.county_intersecting_constituency (county_id, constituency_id);
 \end{lstlisting}
 
-\subsection{4. Derivation of \emph{County} \textless{}-\textgreater{}
+\subsection{Derivation of \emph{County} \textless{}-\textgreater{}
 \emph{Constituency}}\label{derivation-of-county---constituency}
 
 Take \emph{Berlin} for example:
 
-\begin{lstlisting}
+\begin{lstlisting}[language=SQL]
 select * from county_intersecting_constituency where county_label like '%Berlin%' order by area_intersection;
 \end{lstlisting}
 
