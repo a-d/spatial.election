@@ -3,8 +3,6 @@ package edu.spatial.election.domain;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,12 +17,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.hibernate.annotations.Type;
-
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 
@@ -35,12 +30,12 @@ import edu.spatial.election.domain.kind.ExportableGeometry;
 @Table(name = "CONSTITUENCY")
 public class Constituency extends ExportableGeometry implements Serializable {
 
-	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
-	private long gid;
+	private Integer gid;
 
+	@Id
 	@Column(unique=true)
-	private int wkr_nr;
+	private Integer wkr_nr;
 
 	private String wkr_name;
 
@@ -49,22 +44,22 @@ public class Constituency extends ExportableGeometry implements Serializable {
 	private String land_name;
 
 	@JsonIgnore
-	@Type(type="org.hibernate.spatial.GeometryType")
+	//@Type(type="org.hibernate.spatial.GeolatteGeometryType")
 	@Column(columnDefinition="Geometry")
 	private Point centerPoint;
 
 	@JsonIgnore
-	@Type(type="org.hibernate.spatial.GeometryType")
+	//@Type(type="org.hibernate.spatial.GeolatteGeometryType")
 	@Column(columnDefinition="Geometry")
 	private MultiPolygon geom;
 		
-
+/*
 	@JsonIgnore
 	@OneToMany(fetch=FetchType.LAZY)
 	@JoinColumn(name="constituency_id", referencedColumnName="wkr_nr")
 	@OrderBy("areaQuota")
 	private List<CountyContainsConstituency> dependingCounties = new LinkedList<CountyContainsConstituency>();
-	
+*/
 	
 	@JsonIgnore
 	@OneToMany(fetch=FetchType.EAGER)
@@ -80,11 +75,13 @@ public class Constituency extends ExportableGeometry implements Serializable {
 
 	
 	public static Constituency createSaveProxy(final Constituency c) {
-		Constituency prox = new Constituency() { 
+		Constituency prox = new Constituency() {
+			/*
 			@Override
 			public List<CountyContainsConstituency> getDependingCounties() {
 				return c.getDependingCounties();
 			}
+			*/
 			@Override
 			public Set<ElectionResult> getElectionResults() {
 				return c.getElectionResults();
@@ -108,19 +105,19 @@ public class Constituency extends ExportableGeometry implements Serializable {
 	}
 	
 
-	public long getGid() {
+	public Integer getGid() {
 		return gid;
 	}
 
-	public void setGid(long gid) {
+	public void setGid(Integer gid) {
 		this.gid = gid;
 	}
 
-	public int getWkr_nr() {
+	public Integer getWkr_nr() {
 		return wkr_nr;
 	}
 
-	public void setWkr_nr(int wkr_nr) {
+	public void setWkr_nr(Integer wkr_nr) {
 		this.wkr_nr = wkr_nr;
 	}
 
@@ -164,6 +161,7 @@ public class Constituency extends ExportableGeometry implements Serializable {
 		this.centerPoint = centerPoint;
 	}
 
+/*
 	public List<CountyContainsConstituency> getDependingCounties() {
 		return dependingCounties;
 	}
@@ -171,6 +169,7 @@ public class Constituency extends ExportableGeometry implements Serializable {
 	public void setDependingCounties(List<CountyContainsConstituency> dependingCounties) {
 		this.dependingCounties = dependingCounties;
 	}
+*/
 
 
 	public Set<ElectionResult> getElectionResults() {

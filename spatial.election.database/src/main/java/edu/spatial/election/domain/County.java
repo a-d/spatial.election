@@ -21,8 +21,6 @@ import javax.persistence.OrderBy;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.hibernate.annotations.Type;
-
 import com.vividsolutions.jts.geom.MultiPolygon;
 
 import edu.spatial.election.domain.kind.ExportableGeometry;
@@ -33,10 +31,10 @@ public class County extends ExportableGeometry implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
-	private long gid;
+	private Integer gid;
 
 	@Column(name="id_0")
-	private int countryId;
+	private Integer countryId;
 	
 	@Column(name="iso")
 	private String countryIso;
@@ -45,20 +43,20 @@ public class County extends ExportableGeometry implements Serializable {
 	private String countryName;
 
 	@Column(name="id_1")
-	private int stateId;
+	private Integer stateId;
 
 	@Column(name="name_1")
 	private String stateName;
 	
 
 	@Column(name="id_2")
-	private int districtId;
+	private Integer districtId;
 
 	@Column(name="name_2")
 	private String districtName;
 
 	@Column(name="id_3", unique=true)
-	private int countyId;
+	private Integer countyId;
 
 	@Column(name="name_3")
 	private String countyName;
@@ -77,16 +75,17 @@ public class County extends ExportableGeometry implements Serializable {
 	private String countyTypeEnglish;
 
 	@JsonIgnore
-    @Type(type="org.hibernate.spatial.GeometryType")
+    //@Type(type="org.hibernate.spatial.GeometryType")
 	@Column(columnDefinition="Geometry")
 	private MultiPolygon geom;
+
 
 	@JsonIgnore
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="county_id", referencedColumnName="id_3")
 	@OrderBy("areaQuota")
 	private List<CountyContainsConstituency> dependingConstituencies = new LinkedList<CountyContainsConstituency>();
-	
+
 
 	
 	@JsonIgnore
@@ -103,19 +102,19 @@ public class County extends ExportableGeometry implements Serializable {
 		return super.getGeometryArray();
 	}
 	
-	public long getGid() {
+	public Integer getGid() {
 		return gid;
 	}
 
-	public void setGid(long gid) {
+	public void setGid(Integer gid) {
 		this.gid = gid;
 	}
 
-	public int getCountryId() {
+	public Integer getCountryId() {
 		return countryId;
 	}
 
-	public void setCountryId(int countryId) {
+	public void setCountryId(Integer countryId) {
 		this.countryId = countryId;
 	}
 
@@ -135,11 +134,11 @@ public class County extends ExportableGeometry implements Serializable {
 		this.countryName = countryName;
 	}
 
-	public int getStateId() {
+	public Integer getStateId() {
 		return stateId;
 	}
 
-	public void setStateId(int stateId) {
+	public void setStateId(Integer stateId) {
 		this.stateId = stateId;
 	}
 
@@ -151,11 +150,11 @@ public class County extends ExportableGeometry implements Serializable {
 		this.stateName = stateName;
 	}
 
-	public int getDistrictId() {
+	public Integer getDistrictId() {
 		return districtId;
 	}
 
-	public void setDistrictId(int districtId) {
+	public void setDistrictId(Integer districtId) {
 		this.districtId = districtId;
 	}
 
@@ -167,11 +166,11 @@ public class County extends ExportableGeometry implements Serializable {
 		this.districtName = provinceName;
 	}
 
-	public int getCountyId() {
+	public Integer getCountyId() {
 		return countyId;
 	}
 
-	public void setCountyId(int countyId) {
+	public void setCountyId(Integer countyId) {
 		this.countyId = countyId;
 	}
 

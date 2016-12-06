@@ -5,22 +5,29 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-@Entity
+import edu.spatial.election.domain.keys.ElectionConstituencyPartyId;
+
+
+@Entity @IdClass(ElectionConstituencyPartyId.class)
 @Table(name = "ELECTIONRESULT")
 public class ElectionResult implements Serializable {
+	
 	private static final long serialVersionUID = 1;
 
 	/*
 	@Id
+	@Column(name = "partyId")
 	private long partyId;
 
 	@Id
+	@Column(name = "constituencyId")
 	private long constituencyId;
 
 	@Id
@@ -28,9 +35,8 @@ public class ElectionResult implements Serializable {
 	private Long electionId;
 	*/
 	
-	private long primaryVotes;
-	
-	private long secondaryVotes;
+	private Long primaryVotes;
+	private Long secondaryVotes;
 	
 
 	@Id
@@ -80,19 +86,19 @@ public class ElectionResult implements Serializable {
 		this.electionId = electionId;
 	}
 */
-	public long getPrimaryVotes() {
+	public Long getPrimaryVotes() {
 		return primaryVotes;
 	}
 
-	public void setPrimaryVotes(long primaryVotes) {
+	public void setPrimaryVotes(Long primaryVotes) {
 		this.primaryVotes = primaryVotes;
 	}
 	
-	public long getSecondaryVotes() {
+	public Long getSecondaryVotes() {
 		return secondaryVotes;
 	}
 
-	public void setSecondaryVotes(long secondaryVotes) {
+	public void setSecondaryVotes(Long secondaryVotes) {
 		this.secondaryVotes = secondaryVotes;
 	}
 

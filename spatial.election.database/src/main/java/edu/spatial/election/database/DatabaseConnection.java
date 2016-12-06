@@ -2,58 +2,53 @@ package edu.spatial.election.database;
 
 import java.util.LinkedList;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
-import org.hibernate.service.ServiceRegistryBuilder;
 
 public class DatabaseConnection {
 
-	private static ServiceRegistry serviceRegistry;
-	private static SessionFactory sessionFactory;
-	private static LinkedList<Session> openedSessions = new LinkedList<Session>();
+	private static EntityManagerFactory managerFactory;
+	private static LinkedList<EntityManager> openedManagers = new LinkedList<EntityManager>();
 	
 
-	public static Session openSession() {
-		Session out = getSessionFactory().openSession();
-		openedSessions.add(out);
+	public static EntityManager createManager() {
+		EntityManager out = getManagerFactory().createEntityManager();
+		openedManagers.add(out);
 		return out;
 	}
 
 	public static void close() {
-		if(sessionFactory!=null) {
-			for(Session s : openedSessions) {
-				if(s.isOpen()) {
-					s.flush();
-					s.close();
+		if(managerFactory!=null) {
+			for(EntityManager em : openedManagers) {
+				if(em.isOpen()) {
+					em.flush();
+					em.close();
 				}
 			}
-			if(!sessionFactory.isClosed()) {
-				sessionFactory.close();
+			if(managerFactory.isOpen()) {
+				managerFactory.close();
 			}
 		}
 	}
 	
 
-	private static SessionFactory configureSessionFactory() throws HibernateException {
-	    Configuration configuration = new Configuration();
-	    configuration.configure();
-	    serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();        
-	    sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-	    return sessionFactory;
+	private static EntityManagerFactory createManagerFactory() throws HibernateException {
+	    managerFactory = Persistence.createEntityManagerFactory( "edu.spatial.election" );
+	    return managerFactory;
 	}
 	
-	private static SessionFactory getSessionFactory() {
-		if(sessionFactory==null) {
-			synchronized(openedSessions)
+	private static EntityManagerFactory getManagerFactory() {
+		if(managerFactory==null) {
+			synchronized(openedManagers)
 			{
-				if(sessionFactory==null) {
-					configureSessionFactory();
+				if(managerFactory==null) {
+					createManagerFactory();
 				}
 			}
 		}
-		return sessionFactory;
+		return managerFactory;
 	}
 }

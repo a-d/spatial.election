@@ -30,12 +30,6 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>edu.spatial.election</groupId>
-			<artifactId>database</artifactId>
-			<version>${project.parent.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>net.sf.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
 			<version>2.0</version>

@@ -8,13 +8,13 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.persistence.EntityManager;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.hibernate.Session;
 import edu.spatial.election.backend.holder.CountyVotes;
 import edu.spatial.election.database.DatabaseConnection;
 import edu.spatial.election.database.dao.CountyDAO;
@@ -53,13 +53,13 @@ public class RestCounty {
 			cachedAllCountiesByDetail.put(level, cached = new CountiesByDetail());
 		}
 		if(cached.counties==null || cached.counties.isEmpty() || cached.time==null || (new Date().getTime()-cached.time.getTime())/1000 > CACHED_SECONDS) {
-			if(cached.session==null) {
-				cached.session = DatabaseConnection.openSession();
+			if(cached.em==null) {
+				cached.em = DatabaseConnection.createManager();
 			}
 
 			// Create a DAO
 			CountyDAO countyDAO = f.getCountyDAO();
-			countyDAO.setConnection(cached.session);
+			countyDAO.setEntityManager(cached.em);
 			
 			cached.counties = countyDAO.getCounties();
 			cached.time = new Date();
@@ -91,15 +91,15 @@ public class RestCounty {
 	@GET
 	@Path("{id}")
 	@Produces({MediaType.APPLICATION_JSON})
-	public County getCountyById(@PathParam("id") long id) throws CountyNotFoundException {
-		Session s = DatabaseConnection.openSession();
+	public County getCountyById(@PathParam("id") int id) throws CountyNotFoundException {
+		EntityManager em = DatabaseConnection.createManager();
 		// Create a DAO
 		CountyDAO countyDAO = f.getCountyDAO();
-		countyDAO.setConnection(s);
+		countyDAO.setEntityManager(em);
 
 		County c = countyDAO.findCountyById(id);
 		
-		s.close();
+		em.close();
 		return c;
 	}
 	
@@ -118,11 +118,11 @@ public class RestCounty {
 	@GET
 	@Path("{id}/data")
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<CountyDataPair> getCountyDataById(@PathParam("id") long id) throws CountyNotFoundException {
-		Session s = DatabaseConnection.openSession();
+	public List<CountyDataPair> getCountyDataById(@PathParam("id") int id) throws CountyNotFoundException {
+		EntityManager em = DatabaseConnection.createManager();
 		// Create a DAO
 		CountyDAO countyDAO = f.getCountyDAO();
-		countyDAO.setConnection(s);
+		countyDAO.setEntityManager(em);
 
 		List<CountyDataPair> out = new LinkedList<CountyDataPair>();
 		Map<DataKey, Double> data = new TreeMap<DataKey, Double>(countyDAO.findCountyById(id).getData());
@@ -131,7 +131,7 @@ public class RestCounty {
 			out.add(new CountyDataPair(entry.getKey().toString(), entry.getValue()));
 		}
 
-		s.close();
+		em.close();
 		
 		return out;
 	}
@@ -143,7 +143,7 @@ public class RestCounty {
 	
 
 	private class CountiesByDetail {
-		public Session session;
+		public EntityManager em;
 		public List<County> counties = new LinkedList<County>();
 		public Date time = new Date();
 		@Override

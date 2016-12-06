@@ -15,6 +15,14 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -98,25 +106,25 @@ public class StructureDataToDatabase {
 	
 
 	private File file;
-	private Session session;
+	private EntityManager em;
 	private LinkedList<Result> results = new LinkedList<Result>();
 	private PartiesToDatabase partyLoader;
 
 	private StructureDataToDatabase(File file) {
-		this(file, DatabaseConnection.openSession());
+		this(file, DatabaseConnection.createManager());
 	}
 	
 	
-	private StructureDataToDatabase(File file, Session session) {
+	private StructureDataToDatabase(File file, EntityManager entityManager) {
 		this.file = file;
-		this.session = session;
+		this.em = entityManager;
 		
 		
 	}
 	
 	@Override
 	protected void finalize() throws Throwable {
-		session.close();
+		em.close();
 	}
 	
 	
@@ -200,56 +208,36 @@ public class StructureDataToDatabase {
 		if(isStadt && isLandkreis) {
 			System.out.println("no!");
 		}
+
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<County> q = cb.createQuery(County.class);
+		Root<County> r = q.from(County.class);
 		
-		LinkedList<Criterion> criterions = new LinkedList<Criterion>();
-		if(isStadt) {
-			criterions.add(
-					Restrictions.disjunction()
-						.add(Restrictions.ilike("countyTypeGerman", "kreisfreie", MatchMode.ANYWHERE))
-						.add(Restrictions.eq("countyTypeGerman", ""))
-						.add(Restrictions.isNull("countyTypeGerman")));
-		}
-		else if(isLandkreis) {
-			criterions.add(
-					Restrictions.disjunction()
-						.add(Restrictions.ilike("countyTypeGerman", "Landkreis", MatchMode.ANYWHERE))
-						.add(Restrictions.eq("countyTypeGerman", ""))
-						.add(Restrictions.isNull("countyTypeGerman")));
+		
+		LinkedList<Predicate> criteria = new LinkedList<Predicate>();
+		if(isStadt || isLandkreis) {
+			Path<String> ctg = r.<String>get("countyTypeGerman");
+			criteria.add(
+					cb.or(cb.like(ctg, isStadt ? "%kreisfreie%" : "%Landkreis%"),
+					cb.isNull(ctg),
+					cb.equal(ctg, "")));
 		}
 		
 		for(int x=0; x<parts.length; x++) {
-			Criteria crit = session.createCriteria(County.class);
-			crit.setMaxResults(50);
-			crit.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			Predicate conjs = cb.and( (Predicate[]) criteria.toArray());
+			Predicate disjunction = cb.or(
+					cb.like(r.<String>get("countyName"), "%"+parts[x]+"%"),
+					cb.like(r.<String>get("countyNameVars"), "%"+parts[x]+"%"));
 
-			Conjunction conf = Restrictions.conjunction();
-			crit.add(conf);
-			
-			for(Criterion crite : criterions) {
-				conf.add(crite);
+			List<County> founds = em.createQuery(q.where(cb.and(conjs, disjunction)).distinct(true))
+					.setMaxResults(50)
+					.getResultList();
+
+			if(founds.size()>1) {
+				criteria.add(disjunction);
 			}
-			
-			Disjunction disjunction = Restrictions.disjunction();
-			conf.add(disjunction);
-
-
-			for(MatchMode mm : new MatchMode[] { MatchMode.EXACT, MatchMode.ANYWHERE }) {
-				if(MatchMode.EXACT == mm) {
-					disjunction.add(Restrictions.eq("countyName", parts[x]));
-					disjunction.add(Restrictions.eq("countyNameVars", parts[x]));
-				}
-				else {
-					disjunction.add(Restrictions.ilike("countyName", parts[x], mm));
-					disjunction.add(Restrictions.ilike("countyNameVars", parts[x], mm));
-				}
-				
-				List<?> founds = crit.list();
-				if(founds.size()>1) {
-					criterions.add(disjunction);
-				}
-				else if(founds.size()==1) {
-					return (County) founds.get(0);
-				}
+			else if(founds.size()==1) {
+				return (County) founds.get(0);
 			}
 		}
 		return null;
@@ -270,76 +258,92 @@ public class StructureDataToDatabase {
 
 
 	private void Save() {
-		Transaction tr = session.beginTransaction();
-		HashMap<Integer, Election> elections = new HashMap<Integer, Election>();
-		for(Result result : results) {
-			if(!elections.containsKey(result.year)) {
-				Calendar cal = Calendar.getInstance();
-				cal.set(result.year, 1, 1);
-				Date date = cal.getTime();
-				
-				Election election = null;
-				List<?> o = session.createCriteria(Election.class).add(Restrictions.eq("year", result.year)).list();
-				if(o !=null && o.size()>0) {
-					election = (Election) o.get(0);
-				}
-				else {
-					election = new Election();
-					election.setYear(result.year);
-					election.setDate(date);	
-					session.save(election);
-				}
-				elections.put(result.year, election);
-			}
-		}
+		CriteriaBuilder cb = em.getCriteriaBuilder();
 		HashMap<String, DataKey> dataKeys = new HashMap<String, DataKey>();
-		for(String key : results.get(0).ages.keySet()) {
-			if(!dataKeys.containsKey(key)) {
-				DataKey dataKey = null;
-				List<?> o = session.createCriteria(DataKey.class).add(Restrictions.eq("name", key)).list();
-				if(o !=null && o.size()>0) {
-					dataKey = (DataKey) o.get(0);
-				}
-				else {
-					dataKey = new DataKey();
-					dataKey.setName(key);
-					session.save(dataKey);
-				}
-				dataKeys.put(key, dataKey);
-			}
-		}
-		tr.commit();
 		
-		tr = session.beginTransaction();
-		System.out.println("Skipping: ");
-		int i=0;
-		for(Result result : results) {
-			try {
-				for(Entry<String, Long> age : result.ages.entrySet()) {
-					DataKey key = dataKeys.get(age.getKey());
-					if(session.createCriteria(CountyData.class)
-							.add(Restrictions.eq("county", result.county))
-							.add(Restrictions.eq("key", key)).list().size()<1
-					) {
-						CountyData countyData = new CountyData();
-						countyData.setCounty(result.county);
-						countyData.setKey(key);
-						countyData.setValue((double) age.getValue());
-						session.saveOrUpdate(countyData);
-					}
-					else {
-						System.out.print(".");
-						if(++i % 100 == 0) System.out.println();
+		em.getTransaction().begin();
+		{
+			{
+				CriteriaQuery<Election> q = cb.createQuery(Election.class);
+				HashMap<Integer, Election> elections = new HashMap<Integer, Election>();
+				for(Result result : results) {
+					if(!elections.containsKey(result.year)) {
+						Calendar cal = Calendar.getInstance();
+						cal.set(result.year, 1, 1);
+						Date date = cal.getTime();
+						
+						Election election = null;
+						try {
+							election = em.createQuery(q.where(cb.equal(q.from(Election.class).get("year"), result.year))).getSingleResult();
+						}
+						catch(NoResultException e) {
+							election = new Election();
+							election.setYear(result.year);
+							election.setDate(date);	
+							em.persist(election);
+						}
+						elections.put(result.year, election);
 					}
 				}
 			}
-			catch(Exception e) {
-				System.err.println("Error with result: "+e.getMessage());
-				e.printStackTrace();
+			
+			{
+				CriteriaQuery<DataKey> q = cb.createQuery(DataKey.class);
+				for(String key : results.get(0).ages.keySet()) {
+					if(!dataKeys.containsKey(key)) {
+						DataKey dataKey = null;
+						try {
+							dataKey = em.createQuery(q.where(cb.equal(q.from(DataKey.class).get("name"), key))).getSingleResult();
+						}
+						catch(NoResultException e) {
+							dataKey = new DataKey();
+							dataKey.setName(key);
+							em.persist(dataKey);
+						}
+						dataKeys.put(key, dataKey);
+					}
+				}
 			}
 		}
-		tr.commit();
-		session.flush();	
+		em.getTransaction().commit();
+		
+		
+		
+		em.getTransaction().begin();
+		{
+			CriteriaQuery<CountyData> q = cb.createQuery(CountyData.class);
+			System.out.println("Skipping: ");
+			int i=0;
+			for(Result result : results) {
+				try {
+					for(Entry<String, Long> age : result.ages.entrySet()) {
+						DataKey key = dataKeys.get(age.getKey());
+	
+						try {
+							em.createQuery(q.where(cb.and(
+								cb.equal(q.from(CountyData.class).get("county"), result.county),
+								cb.equal(q.from(CountyData.class).get("key"), key)))).getSingleResult();
+							
+							System.out.print(".");
+							if(++i % 100 == 0) System.out.println();
+						}
+						catch(NoResultException e) {
+							CountyData countyData = new CountyData();
+							countyData.setCounty(result.county);
+							countyData.setKey(key);
+							countyData.setValue((double) age.getValue());
+							em.persist(countyData);
+						}
+					}
+				}
+				catch(Exception e) {
+					System.err.println("Error with result: "+e.getMessage());
+					e.printStackTrace();
+				}
+			}
+		}
+		em.getTransaction().commit();
+		em.flush();	
 	}
 
 }

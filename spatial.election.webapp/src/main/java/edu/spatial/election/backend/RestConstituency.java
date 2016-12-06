@@ -2,13 +2,12 @@ package edu.spatial.election.backend;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import org.hibernate.Session;
 
 import edu.spatial.election.database.DatabaseConnection;
 import edu.spatial.election.database.dao.ConstituencyDAO;
@@ -25,48 +24,48 @@ public class RestConstituency {
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<Constituency> getAllConstituencies() {
-		Session s = DatabaseConnection.openSession();
+		EntityManager em = DatabaseConnection.createManager();
 
 		// Create a DAO
 		ConstituencyDAO constituencyDAO = f.getConstituencyDAO();
-		constituencyDAO.setConnection(s);
+		constituencyDAO.setEntityManager(em);
 
 		List<Constituency> cs = constituencyDAO.getConstituencies();
-		s.close();
+		em.close();
 		return cs;
 	}
 	
 	@GET
 	@Path("{id}/geometry")
 	@Produces({MediaType.APPLICATION_JSON})
-	public double[][][] getConstituencyGeometryById(@PathParam("id") long id) throws ConstituencyNotFoundException {
-		Session s = DatabaseConnection.openSession();
+	public double[][][] getConstituencyGeometryById(@PathParam("id") int id) throws ConstituencyNotFoundException {
+		EntityManager em = DatabaseConnection.createManager();
 
 		// Create a DAO
 		ConstituencyDAO constituencyDAO = f.getConstituencyDAO();
-		constituencyDAO.setConnection(s);
+		constituencyDAO.setEntityManager(em);
 
 		Constituency c = constituencyDAO.findConstituencyById(id);
 		c.setGeometryDetail(0);
 		c.getGeometryArray();
 		double[][][] result = c.getGeometryArray();
 		
-		s.close();
+		em.close();
 		return result;
 	}
 
 	@GET
 	@Path("{id}")
 	@Produces({MediaType.APPLICATION_JSON})
-	public Constituency getConstituencyById(@PathParam("id") long id) throws ConstituencyNotFoundException {
-		Session s = DatabaseConnection.openSession();
+	public Constituency getConstituencyById(@PathParam("id") int id) throws ConstituencyNotFoundException {
+		EntityManager em = DatabaseConnection.createManager();
 
 		// Create a DAO
 		ConstituencyDAO constituencyDAO = f.getConstituencyDAO();
-		constituencyDAO.setConnection(s);
+		constituencyDAO.setEntityManager(em);
 
 		Constituency c = constituencyDAO.findConstituencyById(id);
-		s.close();
+		em.close();
 		
 		
 		// cannot return c because it is just a Hibernate facade

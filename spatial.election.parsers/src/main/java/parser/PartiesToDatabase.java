@@ -13,11 +13,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.TreeMap;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
+import org.hibernate.HibernateException;
 import edu.spatial.election.database.DatabaseConnection;
 import edu.spatial.election.domain.Party;
 
@@ -66,24 +67,24 @@ public class PartiesToDatabase {
 
 
 	private File file;
-	private Session session;
+	private EntityManager em;
 	private LinkedList<String> partyNames = new LinkedList<String>();
 	private TreeMap<Integer, Party> parties = new TreeMap<Integer, Party>();
 	private Random rand;
 
 	public PartiesToDatabase(File file) {
-		this(file, DatabaseConnection.openSession());
+		this(file, DatabaseConnection.createManager());
 	}
 	
-	public PartiesToDatabase(File file, Session session) {
+	public PartiesToDatabase(File file, EntityManager entityManager) {
 		this.file = file;
-		this.session = session;
+		this.em = entityManager;
 		this.rand = new Random();
 	}
 	
 	@Override
 	protected void finalize() throws Throwable {
-		session.close();
+		em.close();
 	}
 	
 	
@@ -101,20 +102,26 @@ public class PartiesToDatabase {
 	}
 
 	private void Save() throws HibernateException {
-		Transaction tr = session.beginTransaction();		int pos = 0;
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Party> q = cb.createQuery(Party.class);
+		Root<Party> r = q.from(Party.class);
+		em.getTransaction().begin();
+		int pos = 0;
 		for(String partyName : partyNames) {
-			List<?> alrdyParty = session.createCriteria(Party.class).add(Restrictions.eq("partyName", partyName)).list();
+			CriteriaQuery<Party> query = q.select(r).where(cb.equal(r.get("partyName"), partyName));
+			List<Party> alrdyParty = em.createQuery(query).getResultList();
 			Party party = alrdyParty!=null && alrdyParty.size()>0 ? (Party) alrdyParty.get(0) : null;
 			if(party==null) {
 				party = new Party();
 				party.setPartyName(partyName);
 				party.setColor(generateColor());
-				session.saveOrUpdate(party);
+				
+				em.persist(party);
 			}
 			parties.put(pos++, party);
 		}
-		tr.commit();
-		session.flush();
+		em.getTransaction().commit();
+		em.flush();
 	}
 
 

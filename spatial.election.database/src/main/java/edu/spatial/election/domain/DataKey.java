@@ -20,7 +20,7 @@ public class DataKey implements Comparable<DataKey> {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
-	private long id;
+	private Integer id;
 	
 	@Column(unique=true, nullable=false)
 	private String name;
@@ -43,11 +43,11 @@ public class DataKey implements Comparable<DataKey> {
 		return name;
 	}
 
-	public long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

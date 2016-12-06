@@ -2,10 +2,13 @@ package edu.spatial.election.database.dao.impl;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 
 import edu.spatial.election.database.dao.CountyDAO;
 import edu.spatial.election.database.exceptions.ConstituencyNotFoundException;
@@ -16,26 +19,26 @@ import edu.spatial.election.domain.County;
 public class PostgisCountyDAO implements CountyDAO {
 
 	static private final Log log = LogFactory.getLog(PostgisCountyDAO.class);
-	private Session s;
+	private CriteriaBuilder cb;
+	private EntityManager em;
 
 
 
-	public void setConnection(Session s) {
-		this.s = s;
+
+	public void setEntityManager(EntityManager em) {
+		this.em = em;
+		this.cb = em.getCriteriaBuilder();
 	}
 
 
 
-	public County findCountyById(long id) throws CountyNotFoundException {
+	public County findCountyById(int id) throws CountyNotFoundException {
 		log.info("retrieving constituency with ID " + id);
 
 		County out = null;
 		try
 		{
-			out = (County) s.createCriteria(County.class)
-					.add(Restrictions.idEq(id))
-					.list()
-					.get(0);
+			out = em.find(County.class, id);
 		}
 		catch(Exception e)
 		{
@@ -49,10 +52,10 @@ public class PostgisCountyDAO implements CountyDAO {
 	public List<County> findCountyByState(String stateName) {
 		log.info("retrieving counties with state name " + stateName);
 
-		@SuppressWarnings("unchecked")
-		List<County> out = (List<County>) s.createCriteria(County.class)
-					.add(Restrictions.eq("stateName", stateName))
-					.list();
+		CriteriaQuery<County> cq = cb.createQuery(County.class);
+		CriteriaQuery<County> query = cq.where(cb.equal(cq.from(Constituency.class).get("stateName"), stateName));
+		List<County> out = em.createQuery(query).getResultList();
+		
 		return out;
 	}
 
@@ -61,23 +64,24 @@ public class PostgisCountyDAO implements CountyDAO {
 	public List<County> findCountyByDistrict(String districtName) {
 		log.info("retrieving counties with district name " + districtName);
 
-		@SuppressWarnings("unchecked")
-		List<County> out = (List<County>) s.createCriteria(County.class)
-					.add(Restrictions.eq("districtName", districtName))
-					.list();
+		CriteriaQuery<County> cq = cb.createQuery(County.class);
+		CriteriaQuery<County> query = cq.where(cb.equal(cq.from(Constituency.class).get("districtName"), districtName));
+		List<County> out = em.createQuery(query).getResultList();
+		
 		return out;
 	}
 
 
 
-	@SuppressWarnings("unchecked")
 	public List<County> getCounties() {
-		return (List<County>) s.createCriteria(County.class).list();
+		CriteriaQuery<County> q = cb.createQuery(County.class);
+		Root<County> r = q.from(County.class);
+		return em.createQuery(q.select(r)).getResultList();
 	}
 
 
 
-	public List<Constituency> findConstituenciesOfCounty(long countyId) throws ConstituencyNotFoundException {
+	public List<Constituency> findConstituenciesOfCounty(int countyId) throws ConstituencyNotFoundException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -85,13 +89,13 @@ public class PostgisCountyDAO implements CountyDAO {
 
 
 	public void saveCounty(County county) {
-		s.saveOrUpdate(county);
+		em.persist(county);
 	}
 
 
 
-	public void deleteCounty(long id) throws CountyNotFoundException {
-		s.delete(findCountyById(id));
+	public void deleteCounty(int id) throws CountyNotFoundException {
+		em.remove(findCountyById(id));
 	}
 
 }

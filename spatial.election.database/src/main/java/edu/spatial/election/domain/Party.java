@@ -12,7 +12,7 @@ public class Party {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
-	private long partyId;
+	private Integer partyId;
 	
 	private String partyName;
 	
@@ -20,11 +20,11 @@ public class Party {
 	
 	
 
-	public long getPartyId() {
+	public Integer getPartyId() {
 		return partyId;
 	}
 
-	public void setPartyId(long partyId) {
+	public void setPartyId(Integer partyId) {
 		this.partyId = partyId;
 	}
 

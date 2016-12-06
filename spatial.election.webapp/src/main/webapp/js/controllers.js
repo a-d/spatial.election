@@ -1,4 +1,4 @@
-var VOTE = "votes1";
+var VOTE = "votes2";
 var ELECTION_PARTIES = [];
 
 angular.module('myApp.controllers', [])
@@ -68,7 +68,7 @@ angular.module('myApp.controllers', [])
 					maxVotes1 = e.results[i].votes1;
 				}
 				if(e.results[i].votes2>maxVotes2) {
-					maxVotes1 = e.results[i].votes2;
+					maxVotes2 = e.results[i].votes2;
 				}
 			}
 			
@@ -97,9 +97,7 @@ angular.module('myApp.controllers', [])
 				}
 			}
 		    results.sort(function(a, b){
-		        a = a.votes1 || 0;
-		        b = b.votes1 || 0;
-		        return b - a;
+		        return (b[VOTE] || 0) - (a[VOTE] || 0);
 		    });
 		    
 		    

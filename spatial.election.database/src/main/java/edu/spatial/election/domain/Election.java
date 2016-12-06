@@ -18,9 +18,9 @@ public class Election {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
-	private long electionId;
+	private Integer electionId;
 	
-	private int year;
+	private Integer year;
 	
 	private Date date;
 	
@@ -36,22 +36,22 @@ public class Election {
 	}
 	
 	
-	public long getElectionId() {
+	public Integer getElectionId() {
 		return electionId;
 	}
 
 
-	public void setElectionId(long electionId) {
+	public void setElectionId(Integer electionId) {
 		this.electionId = electionId;
 	}
 
 
-	public int getYear() {
+	public Integer getYear() {
 		return year;
 	}
 
 
-	public void setYear(int year) {
+	public void setYear(Integer year) {
 		this.year = year;
 	}
 

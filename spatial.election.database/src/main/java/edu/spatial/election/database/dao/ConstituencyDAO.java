@@ -8,10 +8,10 @@ import edu.spatial.election.domain.Constituency;
 
 public interface ConstituencyDAO extends SimpleDAO {
 
-	public Constituency findConstituencyById(long id) throws ConstituencyNotFoundException;
+	public Constituency findConstituencyById(int id) throws ConstituencyNotFoundException;
 	public List<Constituency> findConstituencyByState(String stateName);
 	public void saveConstituency(Constituency constituency);
-	public void deleteConstituency(long id) throws ConstituencyNotFoundException;
+	public void deleteConstituency(int id) throws ConstituencyNotFoundException;
 	public List<Constituency> getConstituencies();
 
 }

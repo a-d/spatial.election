@@ -1,13 +1,14 @@
 package edu.spatial.election.backend;
 
 import java.util.List;
+
+import javax.persistence.EntityManager;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.hibernate.Session;
 import edu.spatial.election.database.DatabaseConnection;
 import edu.spatial.election.database.dao.PartyDAO;
 import edu.spatial.election.database.dao.SpatialDAOFactory;
@@ -24,11 +25,11 @@ public class RestParty {
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<Party> getAllParties() {
 
-		Session s = DatabaseConnection.openSession();
+		EntityManager em = DatabaseConnection.createManager();
 
 		// Create a DAO
 		PartyDAO partyDAO = f.getPartyDAO();
-		partyDAO.setConnection(s);
+		partyDAO.setEntityManager(em);
 
 		List<Party> cs = partyDAO.getParties();
 
@@ -39,17 +40,17 @@ public class RestParty {
 	@GET
 	@Path("{id}")
 	@Produces({MediaType.APPLICATION_JSON})
-	public Party getPartyById(@PathParam("id") long id) throws PartyNotFoundException {
+	public Party getPartyById(@PathParam("id") int id) throws PartyNotFoundException {
 		
-		Session s = DatabaseConnection.openSession();
+		EntityManager em = DatabaseConnection.createManager();
 		
 		// Create a DAO
 		PartyDAO partyDAO = f.getPartyDAO();
-		partyDAO.setConnection(s);
+		partyDAO.setEntityManager(em);
 
 		Party c = partyDAO.findPartyById(id);
 		
-		s.close();
+		em.close();
 		return c;
 	}
 }

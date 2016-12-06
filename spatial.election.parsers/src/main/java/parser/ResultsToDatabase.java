@@ -13,11 +13,8 @@ import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import javax.persistence.EntityManager;
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
-
 import edu.spatial.election.database.DatabaseConnection;
 import edu.spatial.election.domain.Constituency;
 import edu.spatial.election.domain.Election;
@@ -86,30 +83,30 @@ public class ResultsToDatabase {
 	
 
 	private File file;
-	private Session session;
+	private EntityManager em;
 	private LinkedList<Result> results = new LinkedList<Result>();
 	private PartiesToDatabase partyLoader;
 
 	private ResultsToDatabase(File file) {
-		this(file, DatabaseConnection.openSession());
+		this(file, DatabaseConnection.createManager());
 	}
 	
 	
-	private ResultsToDatabase(File file, Session session) {
+	private ResultsToDatabase(File file, EntityManager entityManager) {
 		this.file = file;
-		this.session = session;
+		this.em = entityManager;
 		
 		
 	}
 	
 	@Override
 	protected void finalize() throws Throwable {
-		session.close();
+		em.close();
 	}
 	
 	
 	private void Load() throws HibernateException, IOException {
-		partyLoader = new PartiesToDatabase(file, session);
+		partyLoader = new PartiesToDatabase(file, em);
 		TreeMap<Integer, Party> parties = partyLoader.getParties();
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), Charset.forName("ISO-8859-1")));
@@ -152,7 +149,7 @@ public class ResultsToDatabase {
 
 
 	private void Save() {
-		Transaction tr = session.beginTransaction();
+		em.getTransaction().begin();
 		HashMap<Integer, Election> elections = new HashMap<Integer, Election>();
 		
 		for(Result result : results) {
@@ -165,12 +162,13 @@ public class ResultsToDatabase {
 				election.setYear(result.year);
 				election.setDate(date);
 				
-				session.save(election);
+				em.persist(election);
 				elections.put(result.year, election);
 			}
 		}
-		tr.commit();
-		tr = session.beginTransaction();
+		
+		em.getTransaction().commit();
+		em.getTransaction().begin();
 
 		HashMap<Integer, Constituency> constituencies = new HashMap<Integer, Constituency>();
 		
@@ -178,7 +176,7 @@ public class ResultsToDatabase {
 			try {
 				Constituency consti = constituencies.get(result.constId);
 				if(consti==null) {
-					constituencies.put(result.constId, consti = (Constituency) session.createCriteria(Constituency.class).add(Restrictions.idEq((long) result.constId)).list().get(0));
+					constituencies.put(result.constId, consti = em.find(Constituency.class, result.constId));
 				}
 				ElectionResult electionResult = new ElectionResult();
 				electionResult.setPrimaryVotes(result.first);
@@ -186,15 +184,15 @@ public class ResultsToDatabase {
 				electionResult.setParty(result.party);
 				electionResult.setElection(elections.get(result.year));
 				electionResult.setConstituency(consti);
-				session.saveOrUpdate(electionResult);
+				em.persist(electionResult);
 			}
 			catch(Exception e) {
 				System.err.println("Error with result: "+e.getMessage());
 				e.printStackTrace();
 			}
 		}
-		tr.commit();
-		session.flush();	
+		em.getTransaction().commit();
+		em.flush();	
 	}
 
 }

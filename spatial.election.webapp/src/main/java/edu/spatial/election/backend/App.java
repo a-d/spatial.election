@@ -3,7 +3,7 @@ package edu.spatial.election.backend;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import org.hibernate.Session;
+import javax.persistence.EntityManager;
 
 import edu.spatial.election.database.DatabaseConnection;
 import edu.spatial.election.database.dao.ConstituencyDAO;
@@ -19,11 +19,11 @@ public class App {
 		SpatialDAOFactory f =  SpatialDAOFactory.getDAOFactory(SpatialDAOFactory.POSTGIS);
 
 		try {
-			Session s = DatabaseConnection.openSession();
+			EntityManager em = DatabaseConnection.createManager();
 
 			// Create a DAO
 			ConstituencyDAO constituencyDAO = f.getConstituencyDAO();
-			constituencyDAO.setConnection(s);
+			constituencyDAO.setEntityManager(em);
 
 			Constituency c = constituencyDAO.findConstituencyById(67);
 			System.out.println(c);
@@ -33,7 +33,7 @@ public class App {
 				System.out.print(x);
 			}
 			
-			s.close();
+			em.close();
 
 		} catch(Exception e) {
 			e.printStackTrace();

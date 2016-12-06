@@ -5,13 +5,16 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-@Entity
+import edu.spatial.election.domain.keys.CountyKeyId;
+
+@Entity @IdClass(CountyKeyId.class)
 @Table(name="COUNTY_DATA")
 public class CountyData implements Serializable {
 	private static final long serialVersionUID = 1L;

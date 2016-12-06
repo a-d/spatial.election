@@ -1,8 +1,8 @@
 package edu.spatial.election.database.dao;
 
-import org.hibernate.Session;
+import javax.persistence.EntityManager;
 
 public interface SimpleDAO {
 
-	public void setConnection(Session s);
+	public void setEntityManager(EntityManager em);
 }
