@@ -7,3 +7,8 @@ A graphical representation of election results and their relations to political 
   https://github.com/a-d/spatial.election/wiki
 
 
+---
+  
+Screenshot:
+
+![screenshot](https://raw.githubusercontent.com/a-d/spatial.election/master/screenshot.png)
