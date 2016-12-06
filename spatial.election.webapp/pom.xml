@@ -14,12 +14,12 @@
 		<version>1.0</version>
 		<relativePath>../spatial.election.root/pom.xml</relativePath>
 	</parent>
-	
+
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    	<final.name>spatial.election</final.name>
-    	<final.version>0.1</final.version>
+		<final.name>spatial.election</final.name>
+		<final.version>0.1</final.version>
 	</properties>
 
 
@@ -30,15 +30,6 @@
 			<version>${project.parent.version}</version>
 			<scope>compile</scope>
 		</dependency>
-		
-
-		<!-- misc -->
-		<dependency>
-			<groupId>asm</groupId>
-			<artifactId>asm-all</artifactId>
-			<version>3.1</version>
-		</dependency>
-		<!-- -->
 
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
@@ -50,40 +41,29 @@
 			<artifactId>json</artifactId>
 			<version>20160810</version>
 		</dependency>
-		
+
 		<!-- jersey -->
 		<dependency>
-			<groupId>com.sun.jersey</groupId>
+			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-server</artifactId>
-			<version>1.19.3</version>
+			<version>2.24.1</version>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-json</artifactId>
-			<version>1.19.3</version>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet-core</artifactId>
+			<version>2.24.1</version>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-core</artifactId>
-			<version>1.19.3</version>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-jetty-http</artifactId>
+			<version>2.24.1</version>
 		</dependency>
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-servlet</artifactId>
-			<version>1.19.3</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-client</artifactId>
-			<version>1.19.3</version>
-		</dependency>
-
 
 	</dependencies>
 
 
 	<build>
-    	<finalName>${final.name}##${project.version}-${final.version}</finalName>
+		<finalName>${final.name}##${project.version}-${final.version}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
@@ -101,14 +81,5 @@
 			</plugin>
 		</plugins>
 	</build>
-	
-	
-<!-- add JBOSS repository for easy access to Hibernate libraries ->
-	<repositories>
-		<repository>
-			<id>JBOSS</id>
-			<url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
-		</repository>
-	</repositories>
--->
+
 </project>
