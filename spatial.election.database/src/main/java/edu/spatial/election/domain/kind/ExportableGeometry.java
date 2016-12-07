@@ -2,8 +2,7 @@ package edu.spatial.election.domain.kind;
 
 import javax.persistence.Transient;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vividsolutions.jts.geom.Coordinate;
 
 public abstract class ExportableGeometry implements Geometry {

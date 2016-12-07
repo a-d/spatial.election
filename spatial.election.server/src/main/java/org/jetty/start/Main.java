@@ -2,16 +2,18 @@ package org.jetty.start;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
+import java.net.URL;
 import java.security.ProtectionDomain;
 
-import org.apache.commons.io.FileUtils;
-import org.mortbay.jetty.Connector;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.HandlerList;
-import org.mortbay.jetty.nio.SelectChannelConnector;
-import org.mortbay.jetty.webapp.WebAppContext;
-import org.mortbay.thread.QueuedThreadPool;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.webapp.WebAppContext;
+
+import edu.spatial.election.backend.RestConstituency;
+import edu.spatial.election.backend.RestCounty;
+import edu.spatial.election.backend.RestParty;
+import edu.spatial.election.backend.RestRoot;
 
 public class Main {
 
@@ -47,76 +49,82 @@ public class Main {
 	}
 
 	private void start() {
-		// Start a Jetty server with some sensible(?) defaults
-		try {
-			Server srv = new Server();
-			srv.setStopAtShutdown(true);
+	
+	    Server server = new Server(port);
 
-			// Allow 5 seconds to complete.
-			// Adjust this to fit with your own webapp needs.
-			// Remove this if you wish to shut down immediately (i.e. kill <pid>
-			// or Ctrl+C).
-			srv.setGracefulShutdown(5000);
+	     
+	        // Set some timeout options to make debugging easier.
+	    	// SocketConnector connector = new SocketConnector();
+	        //connector.setMaxIdleTime(1000 * 60 * 60);
+	        //connector.setSoLingerTime(-1);
+	        //connector.setPort(8080);
+	        //server.setConnectors(new Connector[]{connector});
+	     
+	    	System.out.println("Adding WebAppContext");
+	        WebAppContext cntx = new WebAppContext();
+	        cntx.setServer(server);
+	        cntx.setContextPath("/");
 
-			// Increase thread pool
-			QueuedThreadPool threadPool = new QueuedThreadPool();
-			threadPool.setMaxThreads(100);
-			srv.setThreadPool(threadPool);
-
-			// Ensure using the non-blocking connector (NIO)
-			Connector connector = new SelectChannelConnector();
-			connector.setPort(port);
-			connector.setMaxIdleTime(30000);
-			srv.setConnectors(new Connector[] { connector });
-
-			// Get the war-file
-			ProtectionDomain protectionDomain = Main.class
-					.getProtectionDomain();
-			String warFile = protectionDomain.getCodeSource().getLocation()
-					.toExternalForm();
-			String currentDir = new File(protectionDomain.getCodeSource()
-					.getLocation().getPath()).getParent();
-
-			// Add the warFile (this jar)
-			WebAppContext context = new WebAppContext(warFile, contextPath);
-			context.setServer(srv);
-			resetTempDirectory(context, currentDir);
-
-			// Add the handlers
-			HandlerList handlers = new HandlerList();
-			handlers.addHandler(context);
-			handlers.addHandler(new ShutdownHandler(srv, context));
-			srv.setHandler(handlers);
-
-			srv.start();
-			srv.join();
-		} catch (Exception e) {
+	    	System.out.println("Port: "+port);
+	    	
+	        ProtectionDomain protectionDomain = edu.spatial.election.backend.App.class.getProtectionDomain();
+	        URL location = protectionDomain.getCodeSource().getLocation();
+	        System.out.println(location.toExternalForm());
+	        cntx.setWar(location.toExternalForm());
+	        
+	        System.out.println("Handler set.");
+	        server.setHandler(cntx);
+	        /*
+	        try {
+	            server.start();
+	            System.out.println("Started");
+	            System.in.read();
+	            server.stop();
+	            server.join();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            System.exit(100);
+	        }
+	        */
+	        
+	        
+	
+	    try {
+	        server.start();
+            System.out.println("Started");
+	        server.join();
+            System.out.println("Joined");
+	    } catch (Exception e) {
+	    	System.out.println("Error while running.");
 			e.printStackTrace();
-		}
+			
+			
+	        try {
+				server.stop();
+			} catch (Exception e1) {
+				System.out.println("Error while shutting down from error.");
+				e1.printStackTrace();
+			}
+		} finally {
+			System.out.println("Done.");
+			try {
+				server.stop();
+			} catch (Exception e) {
+				System.out.println("Error while shutting down after completion.");
+				e.printStackTrace();
+			}
+	        server.destroy();
+	    }
 	}
 
 	private void stop() {
-		System.out.println(ShutdownHandler.shutdown(port));
+
 	}
 
 	private void usage() {
-		System.out
-				.println("Usage: java -jar <file.jar> [start|stop|\n\t"
-						+ "start    Start the server (default)\n\t"
-						+ "stop     Stop the server gracefully\n\t");
+		System.out.println("Usage: java -jar <file.jar> [start|stop|\n\t" + "start    Start the server (default)\n\t"
+				+ "stop     Stop the server gracefully\n\t");
 		System.exit(-1);
-	}
-
-	private void resetTempDirectory(WebAppContext context, String currentDir)
-			throws IOException {
-		File workDir;
-		if (workPath != null) {
-			workDir = new File(workPath);
-		} else {
-			workDir = new File(currentDir, "work");
-		}
-		FileUtils.deleteDirectory(workDir);
-		context.setTempDirectory(workDir);
 	}
 
 }

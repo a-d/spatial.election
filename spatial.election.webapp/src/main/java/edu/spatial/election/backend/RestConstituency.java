@@ -1,8 +1,15 @@
 package edu.spatial.election.backend;
 
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -14,6 +21,7 @@ import edu.spatial.election.database.dao.ConstituencyDAO;
 import edu.spatial.election.database.dao.SpatialDAOFactory;
 import edu.spatial.election.database.exceptions.ConstituencyNotFoundException;
 import edu.spatial.election.domain.Constituency;
+import edu.spatial.election.domain.DataKey;
 
 
 @Path("/constituency")
@@ -34,6 +42,49 @@ public class RestConstituency {
 		em.close();
 		return cs;
 	}
+
+	@Entity
+	public class Parto {
+
+		@Id
+		@GeneratedValue(strategy=GenerationType.SEQUENCE)
+		private Integer partyId;
+		
+		private String partyName;
+		
+		private String color;
+		
+		
+	
+		public Integer getPartyId() {
+			return partyId;
+		}
+	
+		public void setPartyId(Integer partyId) {
+			this.partyId = partyId;
+		}
+	
+		public String getPartyName() {
+			return partyName;
+		}
+	
+		public void setPartyName(String partyName) {
+			this.partyName = partyName;
+		}
+		
+		@Override
+		public String toString() {
+			return getPartyName();
+		}
+	
+		public String getColor() {
+			return color;
+		}
+	
+		public void setColor(String color) {
+			this.color = color;
+		}
+	}
 	
 	@GET
 	@Path("{id}/geometry")
@@ -48,10 +99,8 @@ public class RestConstituency {
 		Constituency c = constituencyDAO.findConstituencyById(id);
 		c.setGeometryDetail(0);
 		c.getGeometryArray();
-		double[][][] result = c.getGeometryArray();
-		
-		em.close();
-		return result;
+		double[][][] res1 = c.getGeometryArray();
+		return res1;
 	}
 
 	@GET
