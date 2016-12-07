@@ -11,9 +11,7 @@
 
 		<init-param>
 			<param-name>jersey.config.server.provider.classnames</param-name>
-			<param-value>
-		       org.glassfish.jersey.moxy.json.MoxyJsonFeature
-		   </param-value>
+			<param-value>org.glassfish.jersey.moxy.json.MoxyJsonFeature</param-value>
 		</init-param>
 		
 		<init-param>
@@ -22,16 +20,6 @@
 		</init-param>
 		 
 		<load-on-startup>1</load-on-startup>
-	</servlet>
-
-	<servlet>
-		<servlet-name>default</servlet-name>
-		<servlet-class>org.eclipse.jetty.servlet.DefaultServlet</servlet-class>
-		<init-param>
-			<param-name>useFileMappedBuffer</param-name>
-			<param-value>false</param-value>
-		</init-param>
-		<load-on-startup>0</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>

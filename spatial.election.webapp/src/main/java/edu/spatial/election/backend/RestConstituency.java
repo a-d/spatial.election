@@ -1,7 +1,5 @@
 package edu.spatial.election.backend;
 
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -9,7 +7,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -21,13 +18,11 @@ import edu.spatial.election.database.dao.ConstituencyDAO;
 import edu.spatial.election.database.dao.SpatialDAOFactory;
 import edu.spatial.election.database.exceptions.ConstituencyNotFoundException;
 import edu.spatial.election.domain.Constituency;
-import edu.spatial.election.domain.DataKey;
 
 
 @Path("/constituency")
 public class RestConstituency {
 	private SpatialDAOFactory f = SpatialDAOFactory.getDAOFactory(SpatialDAOFactory.POSTGIS);
-
 
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
