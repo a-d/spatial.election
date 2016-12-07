@@ -9,12 +9,9 @@ import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.TreeMap;
-
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -23,25 +20,12 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.criterion.Conjunction;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
-
 import edu.spatial.election.database.DatabaseConnection;
-import edu.spatial.election.domain.Constituency;
 import edu.spatial.election.domain.County;
 import edu.spatial.election.domain.CountyData;
 import edu.spatial.election.domain.DataKey;
 import edu.spatial.election.domain.Election;
-import edu.spatial.election.domain.ElectionResult;
-import edu.spatial.election.domain.Party;
 
 public class StructureDataToDatabase {
 
@@ -108,8 +92,6 @@ public class StructureDataToDatabase {
 	private File file;
 	private EntityManager em;
 	private LinkedList<Result> results = new LinkedList<Result>();
-	private PartiesToDatabase partyLoader;
-
 	private StructureDataToDatabase(File file) {
 		this(file, DatabaseConnection.createManager());
 	}

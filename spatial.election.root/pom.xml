@@ -5,7 +5,7 @@
 	<groupId>edu.spatial.election</groupId>
 	<artifactId>root</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0</version>
+	<version>2.0</version>
 	<name>Spatial Election Root Project</name>
 
 	<modules>
